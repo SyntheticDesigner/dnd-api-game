@@ -1,11 +1,14 @@
 import styled from "styled-components";
 
 export const MiniMngrWrap = styled.div`
+  position: fixed;
+  display: ${({ open }) => (open ? "grid" : "none")};
   background-color: pink;
   font-size: 18px;
-  display: flex;
   padding: 8px;
   align-items: center;
+  width: 90vw;
+  box-shadow: 0px 2px 4px hsla(0, 0%, 0%, 0.6);
 `;
 
 export const Team = styled.div`
@@ -18,7 +21,6 @@ export const Team = styled.div`
   position: relative;
   z-index: 1;
   button {
-    padding: 8px 38px;
     background: none;
     border: none;
     color: white;
@@ -30,9 +32,9 @@ export const Team = styled.div`
     background-color: grey;
     position: absolute;
     padding: 0px 8px 16px;
-    & li{
-        background-color: hsla(0, 0%, 0%, 20%);
-        margin: 8px;
+    & li {
+      background-color: hsla(0, 0%, 0%, 20%);
+      margin: 8px;
     }
   }
   &:hover {

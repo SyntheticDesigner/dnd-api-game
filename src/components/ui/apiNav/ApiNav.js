@@ -1,14 +1,12 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-import { getData, rollDice } from "../../../utils/utils";
+import { getData } from "../../../utils/utils";
 //------------------------------------------------------
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ApiNavWrap } from "./ApiNavStyle";
 
-export default function ApiNav({ apiUrl, setApiUrl }) {
+export default function ApiNav({ open, hovApiNav, setHovApiNav }) {
   const [links, setLinks] = useState({});
   const [page, setPage] = useState("");
-  const [pageIndex, setPageIndex] = useState("");
-  const [loading, setLoading] = useState(true);
   const [pageRes, setPageRes] = useState({});
   const [pageContentLink, setPageContentLink] = useState("");
   const [pageContent, setPageContent] = useState("");
@@ -22,39 +20,28 @@ export default function ApiNav({ apiUrl, setApiUrl }) {
     page &&
       getData(page).then((res) => {
         setPageRes(res);
-        setLoading(false);
         // console.log(res);
       });
     pageContentLink &&
       getData(pageContentLink).then((res) => {
         setPageContent(res);
       });
-  }, [page, pageContentLink, pageIndex]);
+  }, [page, pageContentLink]);
   return (
-    <ul
-      style={{
-        display: "grid",
-        listStyle: "none",
-        gridTemplateColumns: "repeat(5, 1fr)",
-        backgroundColor: "darkgrey",
-        padding: "8px",
-      }}
-    >
+    <ApiNavWrap open={open} onMouseEnter={()=>setHovApiNav(!hovApiNav)} onMouseLeave={()=>setHovApiNav(!hovApiNav)}>
       {Object.keys(links).map((keyName, i) => (
         <li key={keyName} style={{ margin: "auto", fontSize: "14px" }}>
           <button
             onClick={() => {
-              setLoading(true);
               setPage(links[keyName]);
-              setApiUrl(links[keyName]);
               navigate(`/${keyName}`);
-            //   setPageIndex(keyName);
+              //   setPageIndex(keyName);
             }}
           >
             {keyName}
           </button>
         </li>
       ))}
-    </ul>
+    </ApiNavWrap>
   );
 }

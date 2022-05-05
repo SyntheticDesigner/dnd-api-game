@@ -7,6 +7,7 @@ import ApiNav from "./components/ui/apiNav/ApiNav";
 import { Outlet } from "react-router-dom";
 import MiniTeamMngr from "./components/ui/teamMngr/MiniTeamMngr";
 import MasterNav from "./components/ui/masterNav/MasterNav";
+import { AppWrap } from "./StyledComponents";
 
 function App() {
   const [links, setLinks] = useState({});
@@ -54,12 +55,10 @@ function App() {
   );
 
   return (
-    <div>
-      {/* <ApiNav apiUrl={apiUrl} setApiUrl={setApiUrl}/> */}
+    <AppWrap>
       <MasterNav/>
-      <MiniTeamMngr />
       <Outlet context={[apiUrl, setApiUrl]} />
-    </div>
+    </AppWrap>
   );
 }
 

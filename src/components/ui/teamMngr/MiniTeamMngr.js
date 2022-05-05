@@ -7,21 +7,21 @@ import {
 import { teamRoster, makeTeam } from "../../../features/parties/makeTeamSlice";
 import { MiniMngrWrap, Roster, Team } from "./MiniMngrStyles";
 
-export default function MiniTeamMngr() {
+export default function MiniTeamMngr({ open }) {
   const party = useSelector(partyMembers);
   const teams = useSelector(teamRoster);
   const dispatch = useDispatch();
   return (
-    <MiniMngrWrap>
-      <p>Current Party Members {party.length}</p>
+    <MiniMngrWrap open={open}>
       <button
         onClick={() => {
           dispatch(makeTeam(party));
           dispatch(setParty([]));
         }}
       >
-        create team
+        New Team
       </button>
+      <p>Current Party Members {party.length}</p>
       <p>Teams {teams.length}</p>
       {teams.length > 0 &&
         teams.map((team, i) => (
