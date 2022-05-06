@@ -359,12 +359,12 @@ export const makeMonsterSlice = createSlice({
           .split("/")[0]
           .split("(")[0]
           .trim()}.png`;
-        console.log(state.monsterObject);
+        // console.log(state.monsterObject);
       }
     },
     setMonsterIndex: (state, action) => {
       state.monsterObject.index = action.payload;
-      console.log(state.monsterObject.index);
+      // console.log(state.monsterObject.index);
     },
   },
 });

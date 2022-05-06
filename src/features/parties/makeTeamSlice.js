@@ -30,10 +30,11 @@ export const makeTeamSlice = createSlice({
       });
     },
     addTeam: teamsAdapter.addOne,
+    updateTeam: teamsAdapter.updateOne,
   },
 });
 
-export const { makeTeam, selectTeam, addTeam } = makeTeamSlice.actions;
+export const { makeTeam, selectTeam, addTeam, updateTeam } = makeTeamSlice.actions;
 
 export const teamRoster = (state) => state.makeTeams.teams;
 export const selectedTeam = (state) => state.makeTeams.selectedTeam;

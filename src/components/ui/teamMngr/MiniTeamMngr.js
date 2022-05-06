@@ -1,29 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addParty,
   clearParty,
   partySelectors,
   addId,
-  partyId
+  partyId,
+  deletePartyMember,
 } from "../../../features/parties/makePartySlice";
 import {
-  teamRoster,
-  makeTeam,
-  selectTeam,
-  selectedTeam,
   addTeam,
   teamsSelectors,
+  updateTeam,
 } from "../../../features/parties/makeTeamSlice";
 import { MiniMngrWrap, Roster, Team } from "./MiniMngrStyles";
 import { nanoid } from "@reduxjs/toolkit";
 
 export default function MiniTeamMngr({ open }) {
-  const partyEnt = useSelector(partySelectors.selectAll);
+  const partyEnt = useSelector(partySelectors.selectEntities);
   const partyTotal = useSelector(partySelectors.selectTotal);
   const teamsEnt = useSelector(teamsSelectors.selectEntities);
   const _partyId = useSelector(partyId);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("render");
+    dispatch(updateTeam({ id: _partyId, changes: { team: partyEnt } }));
+  }, [_partyId, dispatch, partyEnt]);
 
   const teams = [];
   Object.keys(teamsEnt).map(
@@ -38,12 +41,12 @@ export default function MiniTeamMngr({ open }) {
 
   return (
     <MiniMngrWrap open={open}>
-      {/* {JSON.stringify(teams)} */}
       <button
         onClick={() => {
           // dispatch(makeTeam(party));
           dispatch(addTeam({ id: nanoid(), team: party }));
           dispatch(clearParty());
+          dispatch(addId(""));
         }}
       >
         New Team
@@ -55,29 +58,43 @@ export default function MiniTeamMngr({ open }) {
           <Team key={i}>
             <button
               onClick={() => {
-                dispatch(addParty(_team.team));
-                dispatch(addId(_team.id));
+                if (_team.id === _partyId) {
+                  dispatch(clearParty());
+                  dispatch(addId(""));
+                } else {
+                  dispatch(addParty(_team.team));
+                  dispatch(addId(_team.id));
+                }
               }}
             >
-              Team {i + 1} Members: {_team.team.length}
+              Team {i + 1} Members: {Object.keys(_team.team).length}
             </button>{" "}
           </Team>
         ))}
       {partyTotal > 0 && (
-        <>{JSON.stringify(partyEnt)}
-          <h2>Id <br/>{_partyId}</h2>
-          {/* <h3>{editingTeam.teamId}</h3>
+        <>
+          <h2>
+            Id <br />
+            {_partyId}
+          </h2>
           <ul>
-            {editingTeam.teamMembers.map((member, i) => (
+            {party.map(({ id, member }, i) => (
               <li key={i}>
-                <p>{member.info.name}</p>
-                <p>{member.memberId}</p>
-                <button onClick={()=>dispatch(deletePartyMember([editingTeam, member.memberId]))}>Delete</button>
+                <p>{member.name}</p>
+                <p>{id}</p>
+                <button
+                  onClick={() => {
+                    dispatch(deletePartyMember(id));
+                    console.log(partyEnt);
+                  }}
+                >
+                  Delete
+                </button>
               </li>
             ))}
-          </ul> */}
+          </ul>
         </>
-      ) }
+      )}
     </MiniMngrWrap>
   );
 }
