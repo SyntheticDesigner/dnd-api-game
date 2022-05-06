@@ -11,25 +11,24 @@ import {
 } from "../../features/monster/makeMonsterSlice";
 import {
   addPartyMember,
-  partyMembers,
 } from "../../features/parties/makePartySlice";
 import RollModifier from "../ui/setPieces/RollModifier";
+import { nanoid } from "@reduxjs/toolkit";
 
 export default function Monster() {
   const monsterImg = useSelector(monsterImage);
   const monster = useSelector(monsterObject);
-  const party = useSelector(partyMembers);
   const dispatch = useDispatch();
 
   const addPartyClick = () => {
-    dispatch(addPartyMember(monster));
+    dispatch(addPartyMember({id: nanoid(), member: monster}))
   };
   const conditionImmunities = monster.condition_immunities.length ? (
     <div className='fullLine'>
       Condition Immunities: <br />
       <section>
         {monster.condition_immunities.map((data) => (
-          <p>{data.name}</p>
+          <p key={nanoid()}>{data.name}</p>
         ))}
       </section>
     </div>
@@ -41,7 +40,7 @@ export default function Monster() {
       Damage Immunities: <br />
       <section>
         {monster.damage_immunities.map((data) => (
-          <p>{data}</p>
+          <p key={nanoid()}>{data}</p>
         ))}
       </section>
     </div>
@@ -53,7 +52,7 @@ export default function Monster() {
       Damage Resistances: <br />
       <section>
         {monster.damage_resistances.map((data) => (
-          <p>{data}</p>
+          <p key={nanoid()}>{data}</p>
         ))}
       </section>
     </div>
@@ -65,7 +64,7 @@ export default function Monster() {
       Damage Vulnerabilities: <br />
       <section>
         {monster.damage_vulnerabilities.map((data) => (
-          <p>{data}</p>
+          <p key={nanoid()}>{data}</p>
         ))}
       </section>
     </div>
