@@ -11,7 +11,7 @@ export default function MonsterList({ data, setMonsterUrl }) {
   const [listOpen, setListOpen] = useState(true);
   const params = useParams();
   useEffect(() => {
-    setMonsterUrl(data.filter(({ index }) => index === params.monsterId)[0].url);
+    params.monsterId && setMonsterUrl(data.filter(({ index }) => index === params.monsterId)[0].url);
   }, [params]);
   let navigate = useNavigate();
   return (

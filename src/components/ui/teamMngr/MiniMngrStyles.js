@@ -12,7 +12,7 @@ export const MiniMngrWrap = styled.div`
 `;
 
 export const Team = styled.div`
-  background-color: grey;
+  background-color: ${({ selected })=>selected?"green":"grey"};
   margin: 0px 16px;
   color: white;
   text-align: center;
@@ -20,10 +20,11 @@ export const Team = styled.div`
   transition: all 0.5s;
   position: relative;
   z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 32px;
   button {
-    background: none;
-    border: none;
-    color: white;
   }
   ul {
     display: none;

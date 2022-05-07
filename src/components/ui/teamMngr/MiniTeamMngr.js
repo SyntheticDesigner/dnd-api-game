@@ -55,7 +55,10 @@ export default function MiniTeamMngr({ open }) {
       <p>Teams</p>
       {teams.length > 0 &&
         teams.map((_team, i) => (
-          <Team key={i}>
+          <Team key={i} selected={_team.id === _partyId ? true : false}>
+            <strong>
+              Team {i + 1} Members: {Object.keys(_team.team).length}
+            </strong>
             <button
               onClick={() => {
                 if (_team.id === _partyId) {
@@ -67,16 +70,18 @@ export default function MiniTeamMngr({ open }) {
                 }
               }}
             >
-              Team {i + 1} Members: {Object.keys(_team.team).length}
+              Edit
             </button>{" "}
           </Team>
         ))}
+      {_partyId && (
+        <h3>
+          Id <br />
+          {_partyId}
+        </h3>
+      )}
       {partyTotal > 0 && (
         <>
-          <h2>
-            Id <br />
-            {_partyId}
-          </h2>
           <ul>
             {party.map(({ id, member }, i) => (
               <li key={i}>
