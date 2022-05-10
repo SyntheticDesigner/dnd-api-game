@@ -1,11 +1,7 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-import { getData, rollDice } from "./utils/utils";
 //------------------------------------------------------
-import { useSelector, useDispatch } from "react-redux";
-import MonsterPage from "./components/monsters/MonsterPage";
-import ApiNav from "./components/ui/apiNav/ApiNav";
 import { Outlet } from "react-router-dom";
-import MiniTeamMngr from "./components/ui/teamMngr/MiniTeamMngr";
+import GameBoard from "./components/gameBoard/GameBoard";
 import MasterNav from "./components/ui/masterNav/MasterNav";
 import { AppWrap } from "./StyledComponents";
 
@@ -58,6 +54,7 @@ function App() {
     <AppWrap>
       <MasterNav/>
       <Outlet context={[apiUrl, setApiUrl]} />
+      <GameBoard/>
     </AppWrap>
   );
 }

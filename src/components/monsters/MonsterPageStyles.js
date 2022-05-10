@@ -15,6 +15,7 @@ export const PageWrap = styled.div`
   border-radius: 8px;
   background-color: hsla(0, 0%, 20%, 0.8);
   color: white;
+  z-index: 1;
 `;
 
 export const ListWrap = styled.ul`

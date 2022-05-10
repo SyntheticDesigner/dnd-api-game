@@ -349,6 +349,7 @@ export const makeMonsterSlice = createSlice({
   initialState: {
     monsterObject: _monsterObject,
     monsterImage: "",
+    monsterPos: {x: 0, y: 0},
   },
   reducers: {
     setMonsterObject: (state, action) => {
@@ -359,12 +360,12 @@ export const makeMonsterSlice = createSlice({
           .split("/")[0]
           .split("(")[0]
           .trim()}.png`;
-        console.log(state.monsterObject);
+        // console.log(state.monsterObject);
       }
     },
     setMonsterIndex: (state, action) => {
       state.monsterObject.index = action.payload;
-      console.log(state.monsterObject.index);
+      // console.log(state.monsterObject.index);
     },
   },
 });
@@ -372,6 +373,7 @@ export const makeMonsterSlice = createSlice({
 export const { setMonsterObject, setMonsterIndex } = makeMonsterSlice.actions;
 
 export const monsterObject = (state) => state.makeMonster.monsterObject;
+export const monster = (state) => state.makeMonster.monsterObject;
 export const monsterImage = (state) => state.makeMonster.monsterImage;
 
 export default makeMonsterSlice.reducer;
