@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import ApiNav from "../apiNav/ApiNav";
 import MiniTeamMngr from "../teamMngr/MiniTeamMngr";
-import { CreateTeamWrap, DndApiBtn, NavGrid, NavWrap } from "./MasterNavStyle";
+import { CreateTeamBtnWrap, DndApiBtn, NavGrid, NavWrap, PlayBtn } from "./MasterNavStyle";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { srdState, teamMngrState, gameStartState, setSrd, toggleSrd, setTeamMngr, toggleTeamMngr, setGameStart, toggleGameStart } from "../../../features/uiController";
 
 export default function MasterNav() {
   const [showApiNav, setShowApiNav] = useState(false);
   const [showMiniMngr, setShowMiniMngr] = useState(false);
   const [hovApiNav, setHovApiNav] = useState(false);
+  const navigate= useNavigate();
   return (
     <NavWrap>
       <NavGrid>
@@ -24,9 +28,14 @@ export default function MasterNav() {
             hovApiNav={hovApiNav}
           />
         </li>
-        <CreateTeamWrap>
+        <CreateTeamBtnWrap>
           <button onClick={() => setShowMiniMngr(!showMiniMngr)}>Manage Teams</button>
-        </CreateTeamWrap>
+        </CreateTeamBtnWrap>
+        <PlayBtn>
+          <button>Play</button>
+        </PlayBtn>
+      <button onClick={()=>navigate("/")}>Close</button>
+
       </NavGrid>
       <MiniTeamMngr open={showMiniMngr}/>
     </NavWrap>

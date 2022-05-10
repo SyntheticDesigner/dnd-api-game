@@ -77,7 +77,7 @@ export const DndApiBtn = styled.button`
   }
 `;
 
-export const CreateTeamWrap = styled.li`
+export const CreateTeamBtnWrap = styled.li`
   grid-column: 2 /4;
   & button {
     font-size: 14px;
@@ -87,4 +87,8 @@ export const CreateTeamWrap = styled.li`
       transform: scale(0.9);
     }
   }
+`;
+
+export const PlayBtn = styled.li`
+  
 `;
