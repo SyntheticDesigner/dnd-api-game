@@ -29,26 +29,48 @@ export const teamSlice = createSlice({
       //add member to list of active members
       const teamArray = JSON.parse(
         JSON.stringify(
-          teamsAdapter.getSelectors().selectById(state, teamId).memberIds
+          teamsAdapter.getSelectors().selectById(state, teamId).members
         )
       );
       //create a deep clone of the array that tracks the members for each team
-      teamArray.push(memberId);
+      teamArray.push({ memberId: memberId, member: member });
       //push the new memberId to the array
       //this is how we connect the members to their team
       //the member should know its teamId and the team knows its memberIds
       teamsAdapter.updateOne(state, {
         id: teamId,
-        changes: { memberIds: teamArray },
+        changes: { members: teamArray },
       });
       //update the team with the new memberIds array
+    },
+    removeMember: (state, { payload: memberId }) => {
+      let _member = membersAdapter.getSelectors().selectById(state.members, memberId);
+      console.log(_member);
+    },
+    setInspect: (state, { payload: { teamId, bool } }) => {
+      teamsAdapter.updateOne(state, {
+        id: teamId,
+        changes: { inspect: bool },
+      });
+    },
+    toggleInspect: (state, { payload: teamId }) => {
+      let bool = teamsAdapter.getSelectors().selectById(state, teamId).inspect;
+      teamsAdapter.updateOne(state, {
+        id: teamId,
+        changes: { inspect: !bool },
+      });
     },
   },
 });
 
-export const { addTeam, addMember, updateTeam, getTeams } = teamSlice.actions;
-
-export const teamRoster = (state) => state.teams.teams;
-export const selectedTeam = (state) => state.teams.selectedTeam;
+export const {
+  addTeam,
+  addMember,
+  updateTeam,
+  getTeams,
+  setInspect,
+  toggleInspect,
+  removeMember,
+} = teamSlice.actions;
 
 export default teamSlice.reducer;
