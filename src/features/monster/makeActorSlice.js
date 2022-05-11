@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { addMember } from "../parties/makeTeamSlice";
 
 const _monsterObject = {
   index: "", // Resource index for shorthand searching.
@@ -344,36 +345,59 @@ const _monsterObject = {
   xp: 0, //The number of experience points (XP) a monster is worth is based on its challenge rating.
 };
 
-export const makeMonsterSlice = createSlice({
-  name: "makeMonster",
+export const makeActorSlice = createSlice({
+  name: "makeActor",
   initialState: {
-    monsterObject: _monsterObject,
-    monsterImage: "",
-    monsterPos: {x: 0, y: 0},
+    id: nanoid(),
+    actorImage: "",
+    actorPos: { x: 0, y: 0 },
+    openInfo: false,
+    actorObject: _monsterObject,
   },
   reducers: {
-    setMonsterObject: (state, action) => {
+    setActorObject: (state, action) => {
       if (action.payload !== "undefined") {
-        state.monsterObject = action.payload;
-        state.monsterImage = action.payload.name && `https://5e.tools/img/MM/${action.payload.name
-          .split(",")[0]
-          .split("/")[0]
-          .split("(")[0]
-          .trim()}.png`;
-        // console.log(state.monsterObject);
+        state.actorObject = action.payload;
+        state.actorImage =
+          action.payload.name &&
+          `https://5e.tools/img/MM/${action.payload.name
+            .split(",")[0]
+            .split("/")[0]
+            .split("(")[0]
+            .trim()}.png`;
+        //create a string that can be used with the 5e tools image database
+        //this is inefficient for load times but no api for images
       }
     },
-    setMonsterIndex: (state, action) => {
-      state.monsterObject.index = action.payload;
+    setActorIndex: (state, action) => {
+      state.actorObject.index = action.payload;
       // console.log(state.monsterObject.index);
     },
+    loadActor: (
+      state,
+      { payload: { id, actorObject, actorImage, actorPos, openInfo } }
+    ) => {
+      state.id = id;
+      state.actorObject = actorObject;
+      state.actorImage = actorImage;
+      state.actorPos = actorPos;
+      state.openInfo = openInfo;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addMember, (state, action) => {
+      state.id = nanoid();
+      //generate a new unique id each time the actor is added to a team
+    });
   },
 });
 
-export const { setMonsterObject, setMonsterIndex } = makeMonsterSlice.actions;
+export const { setActorObject, setActorIndex, loadActor } =
+  makeActorSlice.actions;
 
-export const monsterObject = (state) => state.makeMonster.monsterObject;
-export const monster = (state) => state.makeMonster.monsterObject;
-export const monsterImage = (state) => state.makeMonster.monsterImage;
+export const actorObject = (state) => state.makeActor.actorObject;
+export const actorState = (state) => state.makeActor;
+export const actorId = (state) => state.makeActor.id;
+export const actorImage = (state) => state.makeActor.actorImage;
 
-export default makeMonsterSlice.reducer;
+export default makeActorSlice.reducer;

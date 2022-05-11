@@ -6,22 +6,25 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setMonsterIndex,
   setMonsterObject,
-  monsterObject,
-  monsterImage,
-} from "../../features/monster/makeMonsterSlice";
-import {
-  addPartyMember,
-} from "../../features/parties/makePartySlice";
+  actorObject,
+  actorImage,
+  actorState
+} from "../../features/monster/makeActorSlice";
+import { addMember } from "../../features/parties/makeTeamSlice";
 import RollModifier from "../ui/setPieces/RollModifier";
 import { nanoid } from "@reduxjs/toolkit";
+import { useParams } from "react-router-dom";
 
 export default function Monster() {
-  const monsterImg = useSelector(monsterImage);
-  const monster = useSelector(monsterObject);
-  const dispatch = useDispatch();
+  const monsterImg = useSelector(actorImage);
+  const monster = useSelector(actorObject);
+  const monState = useSelector(actorState);
 
-  const addPartyClick = () => {
-    dispatch(addPartyMember({id: nanoid(), member: monster}))
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const addToTeam = () => {
+    dispatch(addMember({ teamId: params.teamId, member: monState }));
   };
   const conditionImmunities = monster.condition_immunities.length ? (
     <div className='fullLine'>
@@ -73,10 +76,10 @@ export default function Monster() {
   );
 
   return (
-    monster.name && (
+    params.monsterId && monster.name && (
       <MonsterOverview>
-        <button className='addToTeam' onClick={addPartyClick}>
-          Add to Party
+        <button className='addToTeam' onClick={addToTeam}>
+          Add to Team
         </button>
         <img src={monsterImg} alt={monster.name} />
         <h1>{monster.name}</h1>

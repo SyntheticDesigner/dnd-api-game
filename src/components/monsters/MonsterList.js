@@ -6,12 +6,14 @@ import {
   SmallImg,
 } from "./MonsterPageStyles";
 import { useNavigate, useParams } from "react-router-dom";
-// setMonsterUrl(data.url)
 export default function MonsterList({ data, setMonsterUrl }) {
   const [listOpen, setListOpen] = useState(true);
   const params = useParams();
   useEffect(() => {
-    params.monsterId && setMonsterUrl(data.filter(({ index }) => index === params.monsterId)[0].url);
+    params.monsterId &&
+      setMonsterUrl(
+        data.filter(({ index }) => index === params.monsterId)[0].url
+      );
   }, [params]);
   let navigate = useNavigate();
   return (
@@ -22,7 +24,13 @@ export default function MonsterList({ data, setMonsterUrl }) {
       {data.map((data) => (
         <li key={data.index}>
           <button
-            onClick={() => navigate(`/monsters/${data.index}`)}
+            onClick={() =>
+              navigate(
+                `/monsters/${params.teamId !== "null" ? params.teamId : "null"}/${
+                  data.index
+                }/`
+              )
+            }
             img={`https://5e.tools/img/MM/${data.name
               .split(",")[0]
               .split("/")[0]

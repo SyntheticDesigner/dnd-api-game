@@ -3,19 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTeam,
   teamsSelectors,
-  memberSelectors,
-  addMember,
+  membersSelectors,
   toggleInspect,
   removeMember,
+  deleteTeam
 } from "../../../features/parties/makeTeamSlice";
 import { MiniMngrWrap, Roster, Team } from "./MiniMngrStyles";
 import { nanoid } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 export default function MiniTeamMngr({ open }) {
   const teams = useSelector(teamsSelectors.selectEntities);
-  const members = useSelector(memberSelectors.selectEntities);
+  const members = useSelector(membersSelectors.selectEntities);
   const teamIds = useSelector(teamsSelectors.selectIds);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("render");
@@ -28,35 +30,40 @@ export default function MiniTeamMngr({ open }) {
           (id, i) =>
             Object.hasOwnProperty.call(teams, id) && (
               <div>
-                <button onClick={() => dispatch(toggleInspect(id))}>
-                  Team {i + 1} ▼
-                </button>
-                {/* {JSON.stringify(teams[id].members[0].memberId)} */}
+                <div>
+                  <button onClick={() => dispatch(toggleInspect(id))}>
+                    Team {i + 1} {teams[id].inspect ? "▲" : "▼"}
+                  </button>
+                  <button onClick={() => dispatch(deleteTeam(id))}>delete team</button>
+                </div>
                 {teams[id].inspect ? (
                   teams[id].members.length > 0 ? (
                     <>
                       <button
-                        onClick={() => {
-                          dispatch(addMember({ teamId: id, member: {} }));
-                        }}
+                        // onClick={() => {
+                        //   dispatch(addMember({ teamId: id, member: {} }));
+                        // }}
+                        onClick={() => navigate(`/monsters/${id}`)}
                       >
                         Add Team Member
                       </button>
                       <ul>
-                        {teams[id].members.map((member) => (
+                        {teams[id].members.map(({memberId, member}) => (
                           <li>
-                            <p>{member.memberId}</p>
-                            <button>delete</button>
+                            <p>{member.actorObject.name}</p>
+                            <button
+                              onClick={() =>
+                                dispatch(removeMember(memberId))
+                              }
+                            >
+                              delete
+                            </button>
                           </li>
                         ))}
                       </ul>
                     </>
                   ) : (
-                    <button
-                      onClick={() => {
-                        dispatch(addMember({ teamId: id, member: {} }));
-                      }}
-                    >
+                    <button onClick={() => navigate(`/monsters/${id}`)}>
                       Add Team Member
                     </button>
                   )

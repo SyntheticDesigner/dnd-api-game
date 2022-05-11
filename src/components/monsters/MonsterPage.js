@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import Monster from "./Monster";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setMonsterIndex,
-  setMonsterObject,
-  monsterObject,
-} from "../../features/monster/makeMonsterSlice";
+  setActorIndex,
+  setActorObject,
+  actorObject,
+} from "../../features/monster/makeActorSlice";
 import { getData } from "../../utils/utils";
 import MonsterList from "./MonsterList";
 import { MonsterListBtn, PageWrap } from "./MonsterPageStyles";
@@ -16,17 +16,16 @@ export default function MonsterPage({ data, loading }) {
   const [monsterUrl, setMonsterUrl] = useState();
   const [monsterList, setMonsterList] = useState([]);
   const dispatch = useDispatch();
-  const _monsterObject = useSelector(monsterObject);
+  const _monsterObject = useSelector(actorObject);
   const navigate = useNavigate();
 
   useEffect(() => {
     getData("/api/monsters").then((res) => {
       setMonsterList(res);
-      console.log(res);
     });
     monsterUrl &&
       getData(monsterUrl).then((res) => {
-        dispatch(setMonsterObject(res));
+        dispatch(setActorObject(res));
       });
   }, [dispatch, monsterUrl]);
 

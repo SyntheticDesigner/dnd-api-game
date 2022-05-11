@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const GameBoardWrapper = styled.div`
-  background-color: blue;
   height: 100vh;
   position: absolute;
   top: 0px;
@@ -18,13 +17,22 @@ export const GameBoardWrapper = styled.div`
 export const Board = styled.ul`
   display: grid;
   list-style-type: none;
-  grid-template-columns: repeat(2, 100px);
-  grid-template-rows: repeat(5, 100px);
-  height: 532px;
-  width: 328px;
-  gap: 8px 128px;
+  grid-template-columns: repeat(2, 80px);
+  grid-template-rows: repeat(5, 80px);
+  gap: 8px 100px;
   margin: auto auto;
-  li{
+  li {
     border: 2px solid black;
+    padding: 4px;
   }
-`
+`;
+
+export const Token = styled.li`
+  height: 100%;
+  width: 100%;
+  grid-column: ${({ x }) => `${x} / ${x + 1}`};
+  grid-row: ${({ y }) => `${y} / ${y + 1}`};
+  img {
+    height: 100%;
+  }
+`;
