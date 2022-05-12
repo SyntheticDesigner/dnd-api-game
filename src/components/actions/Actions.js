@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { ActionDetailsWrapper, ActionsWrap } from "./ActionStyle";
 
 import { actorState } from "../../features/actor/makeActorSlice";
-import { newAction } from "../../features/battle/actionSlice";
+import { newAction } from "../../features/action/actionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 
@@ -20,18 +20,15 @@ export default function Actions({ actions }) {
     // console.log(actions);
   }, [actions]);
 
-  const Action = ({ action, memberId }) => {
+  const Action = ({ action }) => {
     const [openDetails, setOpenDetails] = useState(false);
     return (
       <div key={nanoid()}>
-        <div
-          onClick={() => setOpenDetails(!openDetails)}
-          className='actionName'
-        >
-          <h2>
+        <div className='actionName'>
+          <h2 onClick={() => setOpenDetails(!openDetails)}>
             {action.name} <div className='arrow'>{openDetails ? "▲" : "▼"}</div>{" "}
           </h2>
-          <button onClick={() => dispatch(newAction(action))} className='use'>
+          <button onClick={() => dispatch(newAction({action: action, actor: actor}))} className='use'>
             Use Action
             {action.attack_bonus && <span>+{action.attack_bonus}</span>}
           </button>

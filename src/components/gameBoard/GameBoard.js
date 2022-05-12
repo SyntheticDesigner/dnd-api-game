@@ -5,7 +5,7 @@ import {
   membersSelectors,
 } from "../../features/teams/makeTeamSlice.js";
 import { useSelector, useDispatch } from "react-redux";
-import Actor from "./Actor";
+import Actor from "../actor/Actor";
 
 export default function GameBoard() {
   const packedTeams = useSelector(teamsSelectors.selectEntities);

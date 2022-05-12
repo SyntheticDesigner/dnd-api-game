@@ -59,6 +59,27 @@ export const teamSlice = createSlice({
       });
       //update the team with the new memberIds array
     },
+    updateMember: (state, { payload }) => {
+      console.log(payload);
+      // const memberId = member.id;
+      // const memberCopy = JSON.parse(JSON.stringify(member));
+      // memberCopy.teamId = teamId;
+      // membersAdapter.addOne(state.members, {
+      //   id: memberId,
+      //   teamId: teamId,
+      //   member: memberCopy,
+      // });
+      // const teamArray = JSON.parse(
+      //   JSON.stringify(
+      //     teamsAdapter.getSelectors().selectById(state, teamId).members
+      //   )
+      // );
+      // teamArray.push({ memberId: memberId, member: memberCopy });
+      // teamsAdapter.updateOne(state, {
+      //   id: teamId,
+      //   changes: { members: teamArray },
+      // });
+    },
     removeMember: (state, { payload: memberId }) => {
       let teamId = membersAdapter
         .getSelectors()
@@ -105,6 +126,7 @@ export const {
   setInspect,
   toggleInspect,
   removeMember,
+  updateMember
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

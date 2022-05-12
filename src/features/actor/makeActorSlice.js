@@ -354,6 +354,8 @@ export const makeActorSlice = createSlice({
     actorPos: { x: 0, y: 0 },
     openInfo: false,
     actorObject: _monsterObject,
+    targetedBy: '',
+    targeting: []
   },
   reducers: {
     setActorObject: (state, action) => {
@@ -376,7 +378,7 @@ export const makeActorSlice = createSlice({
     },
     loadActor: (
       state,
-      { payload: { id, teamId, actorObject, actorImage, actorPos, openInfo } }
+      { payload: { id, teamId, actorObject, actorImage, actorPos, openInfo, targeting } }
     ) => {
       state.id = id;
       state.teamId = teamId;
@@ -384,7 +386,16 @@ export const makeActorSlice = createSlice({
       state.actorImage = actorImage;
       state.actorPos = actorPos;
       state.openInfo = openInfo;
+      state.targeting = targeting;
     },
+    addTarget: (state, {payload : targetId})=>{
+      //make deep copy of the targeting array
+      let arrayCopy = JSON.parse(JSON.stringify(state.targeting));
+      //push id to array
+      arrayCopy.push(targetId);
+      //set targeting array to new array
+      state.targeting = arrayCopy;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(addMember, (state, action) => {
@@ -394,7 +405,7 @@ export const makeActorSlice = createSlice({
   },
 });
 
-export const { setActorObject, setActorIndex, loadActor } =
+export const { setActorObject, setActorIndex, loadActor, addTarget } =
   makeActorSlice.actions;
 
 export const actorObject = (state) => state.makeActor.actorObject;
