@@ -34,5 +34,7 @@ export const Token = styled.li`
   grid-row: ${({ y }) => `${y} / ${y + 1}`};
   img {
     height: 100%;
+    box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.5);
+    border-radius: 50%;
   }
 `;

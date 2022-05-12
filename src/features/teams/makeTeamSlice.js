@@ -16,11 +16,13 @@ export const teamSlice = createSlice({
   }),
   reducers: {
     addTeam: teamsAdapter.addOne,
-    deleteTeam: (state, {payload: teamId})=>{
-      let members = teamsAdapter.getSelectors().selectById(state, teamId).members;
+    deleteTeam: (state, { payload: teamId }) => {
+      let members = teamsAdapter
+        .getSelectors()
+        .selectById(state, teamId).members;
       //get a list of members from the team
-      for ( const index in members ){
-        console.log(members[index].memberId)
+      for (const index in members) {
+        console.log(members[index].memberId);
         membersAdapter.removeOne(state.members, members[index].memberId);
       }
       //remove each member in the list from the membersEntity
@@ -30,11 +32,15 @@ export const teamSlice = createSlice({
     updateTeam: teamsAdapter.updateOne,
     addMember: (state, { payload: { teamId, member } }) => {
       const memberId = member.id;
+      //make a deep clone of member
+      const memberCopy = JSON.parse(JSON.stringify(member));
+      //give the member its teamId
+      memberCopy.teamId = teamId;
       //create random ID
       membersAdapter.addOne(state.members, {
         id: memberId,
         teamId: teamId,
-        member: member,
+        member: memberCopy,
       });
       //add member to list of active members
       const teamArray = JSON.parse(
@@ -43,7 +49,7 @@ export const teamSlice = createSlice({
         )
       );
       //create a deep clone of the array that tracks the members for each team
-      teamArray.push({ memberId: memberId, member: member });
+      teamArray.push({ memberId: memberId, member: memberCopy });
       //push the new memberId to the array
       //this is how we connect the members to their team
       //the member should know its teamId and the team knows its memberIds
@@ -54,7 +60,9 @@ export const teamSlice = createSlice({
       //update the team with the new memberIds array
     },
     removeMember: (state, { payload: memberId }) => {
-      let teamId = membersAdapter.getSelectors().selectById(state.members, memberId).teamId;
+      let teamId = membersAdapter
+        .getSelectors()
+        .selectById(state.members, memberId).teamId;
       //get the teamId from the member that will be deleted
       let teamArray = JSON.parse(
         JSON.stringify(
@@ -62,7 +70,7 @@ export const teamSlice = createSlice({
         )
       );
       //create a deep copy of the team array
-      teamArray = teamArray.filter((member)=>member.memberId!==memberId);
+      teamArray = teamArray.filter((member) => member.memberId !== memberId);
       //remove the the member from the team array
       teamsAdapter.updateOne(state, {
         id: teamId,

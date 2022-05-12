@@ -6,21 +6,23 @@ import {
   loadActor,
   actorState,
   actorId,
-} from "../../features/monster/makeActorSlice";
+} from "../../features/actor/makeActorSlice";
 import ReactDOM from "react-dom";
 
 export default function Actor({ actor, memberIndex, teamIndex }) {
   const dispatch = useDispatch();
   const selectedActor = useSelector(actorState);
   const [modal, setModal] = useState(false);
-
+  console.log(selectedActor);
+  console.log(actor);
   useEffect(() => {}, [selectedActor]);
   return (
     <>
-      {modal && ReactDOM.createPortal(
-        <CharacterSheet actor={actor} modal={modal} setModal={setModal} />,
-        document.getElementById("overlay-root")
-      )}
+      {modal &&
+        ReactDOM.createPortal(
+          <CharacterSheet actor={actor} modal={modal} setModal={setModal} />,
+          document.getElementById("overlay-root")
+        )}
       <Token
         onClick={() => {
           dispatch(loadActor(actor.member));

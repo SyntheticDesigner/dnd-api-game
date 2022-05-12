@@ -5,6 +5,20 @@
   list-style: none;
 }
 
+:root{
+  --tan: tan;
+  --darkTan: rgb(36, 33, 29);
+  --font-light: white;
+  --bg-tag: rgb(105, 90, 69);
+  --bg-char: rgb(88, 74, 54);
+  --bg-dark: rgb(57, 48, 35);
+  --bg-medium: rgb(56, 51, 44);
+  --bg-light: rgb(103, 93, 78);
+  --dark-border: hsla(360, 50%, 30%, 1);
+  --medium-border: rgb(183, 45, 45);
+  --font-color-brand: rgb(255, 255, 255);
+}
+
 button{
   padding: 4px;
   margin: 4px;

@@ -9,8 +9,8 @@ import {
   actorObject,
   actorImage,
   actorState
-} from "../../features/monster/makeActorSlice";
-import { addMember } from "../../features/parties/makeTeamSlice";
+} from "../../features/actor/makeActorSlice";
+import { addMember } from "../../features/teams/makeTeamSlice";
 import RollModifier from "../ui/setPieces/RollModifier";
 import { nanoid } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";

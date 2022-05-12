@@ -7,7 +7,7 @@ import {
   toggleInspect,
   removeMember,
   deleteTeam
-} from "../../../features/parties/makeTeamSlice";
+} from "../../../features/teams/makeTeamSlice";
 import { MiniMngrWrap, Roster, Team } from "./MiniMngrStyles";
 import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ export default function MiniTeamMngr({ open }) {
         {Object.keys(teams).map(
           (id, i) =>
             Object.hasOwnProperty.call(teams, id) && (
-              <div>
+              <div key={nanoid()}>
                 <div>
                   <button onClick={() => dispatch(toggleInspect(id))}>
                     Team {i + 1} {teams[id].inspect ? "▲" : "▼"}
@@ -49,7 +49,7 @@ export default function MiniTeamMngr({ open }) {
                       </button>
                       <ul>
                         {teams[id].members.map(({memberId, member}) => (
-                          <li>
+                          <li key={memberId}>
                             <p>{member.actorObject.name}</p>
                             <button
                               onClick={() =>

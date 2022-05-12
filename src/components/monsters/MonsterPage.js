@@ -6,7 +6,7 @@ import {
   setActorIndex,
   setActorObject,
   actorObject,
-} from "../../features/monster/makeActorSlice";
+} from "../../features/actor/makeActorSlice";
 import { getData } from "../../utils/utils";
 import MonsterList from "./MonsterList";
 import { MonsterListBtn, PageWrap } from "./MonsterPageStyles";

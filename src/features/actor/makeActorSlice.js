@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
-import { addMember } from "../parties/makeTeamSlice";
+import { addMember } from "../teams/makeTeamSlice";
 
 const _monsterObject = {
   index: "", // Resource index for shorthand searching.
@@ -349,6 +349,7 @@ export const makeActorSlice = createSlice({
   name: "makeActor",
   initialState: {
     id: nanoid(),
+    teamId: "",
     actorImage: "",
     actorPos: { x: 0, y: 0 },
     openInfo: false,
@@ -375,9 +376,10 @@ export const makeActorSlice = createSlice({
     },
     loadActor: (
       state,
-      { payload: { id, actorObject, actorImage, actorPos, openInfo } }
+      { payload: { id, teamId, actorObject, actorImage, actorPos, openInfo } }
     ) => {
       state.id = id;
+      state.teamId = teamId;
       state.actorObject = actorObject;
       state.actorImage = actorImage;
       state.actorPos = actorPos;

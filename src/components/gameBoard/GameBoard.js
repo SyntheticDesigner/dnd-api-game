@@ -3,7 +3,7 @@ import { Board, GameBoardWrapper } from "./GameBoardStyle";
 import {
   teamsSelectors,
   membersSelectors,
-} from "../../features/parties/makeTeamSlice.js";
+} from "../../features/teams/makeTeamSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import Actor from "./Actor";
 
@@ -36,6 +36,7 @@ export default function GameBoard() {
         {teams.map((team, teamIndex) =>
           team.members.map((member, memberIndex) => (
               <Actor
+                key={memberIndex}
                 actor={member}
                 memberIndex={memberIndex}
                 teamIndex={teamIndex}

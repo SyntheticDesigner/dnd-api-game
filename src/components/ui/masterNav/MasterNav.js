@@ -35,6 +35,7 @@ export default function MasterNav() {
           <button>Play</button>
         </PlayBtn>
       <button onClick={()=>navigate(-1)}>Back</button>
+      <button onClick={()=>navigate('/')}>Close</button>
 
       </NavGrid>
       <MiniTeamMngr open={showMiniMngr}/>
