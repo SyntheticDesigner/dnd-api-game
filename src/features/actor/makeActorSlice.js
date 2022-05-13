@@ -345,22 +345,28 @@ const _monsterObject = {
   xp: 0, //The number of experience points (XP) a monster is worth is based on its challenge rating.
 };
 
+const initialState = {
+  id: nanoid(),
+  teamId: "",
+  actorImage: "",
+  actorPos: { x: 0, y: 0 },
+  openInfo: false,
+  actorObject: _monsterObject,
+  ac: 0,
+  hp: 0,
+  targetedBy: "",
+  targeting: [],
+};
+
 export const makeActorSlice = createSlice({
   name: "makeActor",
-  initialState: {
-    id: nanoid(),
-    teamId: "",
-    actorImage: "",
-    actorPos: { x: 0, y: 0 },
-    openInfo: false,
-    actorObject: _monsterObject,
-    targetedBy: '',
-    targeting: []
-  },
+  initialState,
   reducers: {
     setActorObject: (state, action) => {
       if (action.payload !== "undefined") {
         state.actorObject = action.payload;
+        state.ac = action.payload.armor_class;
+        state.hp = action.payload.hit_points;
         state.actorImage =
           action.payload.name &&
           `https://5e.tools/img/MM/${action.payload.name
@@ -372,14 +378,22 @@ export const makeActorSlice = createSlice({
         //this is inefficient for load times but no api for images
       }
     },
-    setActorIndex: (state, action) => {
-      state.actorObject.index = action.payload;
-      // console.log(state.monsterObject.index);
-    },
     loadActor: (
       state,
-      { payload: { id, teamId, actorObject, actorImage, actorPos, openInfo, targeting } }
+      {
+        payload: {
+          id,
+          teamId,
+          actorObject,
+          actorImage,
+          actorPos,
+          openInfo,
+          targeting,
+        },
+      }
     ) => {
+      //we dereferenced the actors state and overwrite each object individually
+      //should get an error if something is missing
       state.id = id;
       state.teamId = teamId;
       state.actorObject = actorObject;
@@ -388,14 +402,28 @@ export const makeActorSlice = createSlice({
       state.openInfo = openInfo;
       state.targeting = targeting;
     },
-    addTarget: (state, {payload : targetId})=>{
+    toggleTarget: (state, { payload: actor }) => {
       //make deep copy of the targeting array
       let arrayCopy = JSON.parse(JSON.stringify(state.targeting));
-      //push id to array
-      arrayCopy.push(targetId);
-      //set targeting array to new array
-      state.targeting = arrayCopy;
-    }
+      //check if target is already targeted
+      //we will use this to toggle the target state
+      let isTargeted = 0;
+      for (let i in arrayCopy) {
+        if (arrayCopy[i].id === actor.id) {
+          isTargeted++;
+        }
+      }
+      if (isTargeted) {
+        //if target is in array we remove the target from the array
+        let newArray = arrayCopy.filter((target) => target.id !== actor.id);
+        state.targeting = newArray;
+      } else {
+        //push target to array
+        //set targeting array to new array
+        arrayCopy.push(actor);
+        state.targeting = arrayCopy;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(addMember, (state, action) => {
@@ -405,8 +433,7 @@ export const makeActorSlice = createSlice({
   },
 });
 
-export const { setActorObject, setActorIndex, loadActor, addTarget } =
-  makeActorSlice.actions;
+export const { setActorObject, loadActor, toggleTarget } = makeActorSlice.actions;
 
 export const actorObject = (state) => state.makeActor.actorObject;
 export const actorState = (state) => state.makeActor;

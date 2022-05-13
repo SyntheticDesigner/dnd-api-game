@@ -59,26 +59,28 @@ export const teamSlice = createSlice({
       });
       //update the team with the new memberIds array
     },
-    updateMember: (state, { payload }) => {
-      console.log(payload);
-      // const memberId = member.id;
-      // const memberCopy = JSON.parse(JSON.stringify(member));
-      // memberCopy.teamId = teamId;
-      // membersAdapter.addOne(state.members, {
-      //   id: memberId,
-      //   teamId: teamId,
-      //   member: memberCopy,
-      // });
-      // const teamArray = JSON.parse(
-      //   JSON.stringify(
-      //     teamsAdapter.getSelectors().selectById(state, teamId).members
-      //   )
-      // );
-      // teamArray.push({ memberId: memberId, member: memberCopy });
-      // teamsAdapter.updateOne(state, {
-      //   id: teamId,
-      //   changes: { members: teamArray },
-      // });
+    updateMember: (state, { payload: member }) => {
+      //update the members entity with the new member
+      membersAdapter.updateOne(state.members, {id: member.id, changes: member});
+      //create a deep copy of the member's team member array
+      const teamArray = JSON.parse(
+        JSON.stringify(
+          teamsAdapter.getSelectors().selectById(state, member.teamId).members
+        )
+      );
+      //map through the array updating the designated member
+      let updatedTeamArray = teamArray.map((teamMember)=>{
+        if(teamMember.memberId === member.id){
+          return {memberId: member.id, member: member};
+        }else{
+          return teamMember
+        }
+      })
+      //update the team with the new member array
+      teamsAdapter.updateOne(state, {
+        id: member.teamId,
+        changes: { members: updatedTeamArray },
+      });
     },
     removeMember: (state, { payload: memberId }) => {
       let teamId = membersAdapter

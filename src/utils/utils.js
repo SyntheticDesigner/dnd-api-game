@@ -16,13 +16,6 @@ function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export function generateKey(index) {
-  let key = index && index.length ? `${index.split(" ").join("")}-${Date.now()%10000000 - randomNumber(10, 900)}` : `${index}-${Date.now()%10000000 - randomNumber(10, 900)}`;
-  return key;
-}
-
-generateKey();
-
 export const rollDice = (diceString) => {
   // const regex = new RegExp(/d/);
   const regex = new RegExp(
@@ -58,7 +51,7 @@ export const rollDice = (diceString) => {
       formula.numberOfDice * randomNumber(1, formula.die) +
       formula.add -
       formula.subtract;
-    alert(rollTotal);
+    return rollTotal;
   } else {
     alert("Check the Dice String");
   }

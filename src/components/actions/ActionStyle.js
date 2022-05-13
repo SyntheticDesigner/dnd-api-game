@@ -41,3 +41,21 @@ export const ActionDetailsWrapper = styled.div`
     margin-bottom: 8px;
   }
 `;
+
+export const ActionModal = styled.div`
+  height: 100vh;
+  width: 100%;
+  background-color: var(--bg-overlay);
+  z-index: 4;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  section {
+    margin: auto;
+    border-radius: 8px;
+    background-color: var(--bg-medium);
+    box-shadow: 0px 4px 8px hsla(0, 0%, 0%, 0.5);
+    color: white;
+    padding: 32px;
+  }
+`;

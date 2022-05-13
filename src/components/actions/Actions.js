@@ -1,36 +1,101 @@
-import React from "react";
-import { generateKey, rollDice } from "../../utils/utils";
+import React, { useCallback } from "react";
 import { useState, useEffect } from "react";
-import { ActionDetailsWrapper, ActionsWrap } from "./ActionStyle";
+import ReactDOM from "react-dom";
+import { ActionDetailsWrapper, ActionModal, ActionsWrap } from "./ActionStyle";
 
-import { actorState } from "../../features/actor/makeActorSlice";
-import { newAction } from "../../features/action/actionSlice";
+import { generateKey, rollDice } from "../../utils/utils";
+
+import { actorState, loadActor } from "../../features/actor/makeActorSlice";
+import {
+  updateMember,
+  membersSelectors,
+} from "../../features/teams/makeTeamSlice";
+import {
+  actionState as _actionState,
+  attack,
+  rollDamage,
+  newAction,
+} from "../../features/action/actionSlice";
+
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 
 export default function Actions({ actions }) {
   const [_actions, set_Actions] = useState({});
-  const [dropDown, setDropDown] = useState(false);
+  const [actionModal, setActionModal] = useState(false);
+  const [damageDealt, setDamageDealt] = useState(false);
+  const [load, setLoad] = useState(false);
 
+  const actionState = useSelector(_actionState);
   const actor = useSelector(actorState);
   const dispatch = useDispatch();
+  const members = useSelector(membersSelectors.selectEntities);
 
   useEffect(() => {
     actions && set_Actions(actions);
     // console.log(actions);
   }, [actions]);
 
+  // useEffect(() => {
+  //   if (load) {
+  //     console.log(actionState.damageRoll);
+  //     let test = actionState.attackResult.map(({ hit, id }) => {
+  //       console.log(hit);
+  //       if (hit) {
+  //         console.log(members);
+  //         console.log(id);
+  //         console.log(members[id].member);
+  //         // dispatch(loadActor(members[id].member));
+  //       }
+  //     });
+  //   }
+  // }, [load]);
+
+  const process = useCallback(() => {
+    console.log("in process");
+    console.log(actionState.damageRoll);
+    let test = actionState.attackResult.map(({ hit, id }) => {
+      console.log(hit);
+      if (hit) {
+        console.log(members);
+        console.log(id);
+        console.log(members[id].member);
+        dispatch(loadActor(members[id].member));
+      }
+    });
+  }, [actionState.attackResult, actionState.damageRoll, dispatch, members]);
+
+  useEffect(() => {
+    console.log("hit or miss");
+    if (actionState.hit) {
+      console.log(actionState.hit);
+      setDamageDealt(true);
+    } else {
+      setDamageDealt(false);
+    }
+    if (actionState.damageRoll > 0) {
+      setLoad(true);
+      console.log("call process");
+      process();
+    }
+  }, [actionState, process]);
+
   const Action = ({ action }) => {
     const [openDetails, setOpenDetails] = useState(false);
     return (
-      <div key={nanoid()}>
+      <div>
         <div className='actionName'>
           <h2 onClick={() => setOpenDetails(!openDetails)}>
             {action.name} <div className='arrow'>{openDetails ? "▲" : "▼"}</div>{" "}
           </h2>
-          <button onClick={() => dispatch(newAction({action: action, actor: actor}))} className='use'>
+          <button
+            onClick={() => {
+              dispatch(newAction({ action: action, actor: actor }));
+              setActionModal(true);
+            }}
+            className='use'
+          >
             Use Action
-            {action.attack_bonus && <span>+{action.attack_bonus}</span>}
           </button>
         </div>
         {openDetails && <ActionDetails action={action} />}
@@ -67,11 +132,11 @@ export default function Actions({ actions }) {
             action.damage.length &&
             action.damage.map((damage) =>
               damage.choose ? (
-                <div key={generateKey(damage.choose)}>
+                <div key={nanoid()}>
                   <p>Choose {damage.choose}</p>
                   <ul>
                     {damage.from.map((damage) => (
-                      <li key={generateKey(damage.damage_type.name)}>
+                      <li key={nanoid()}>
                         <button>
                           {damage.damage_type.name} {damage.damage_type.url}
                         </button>
@@ -90,7 +155,7 @@ export default function Actions({ actions }) {
                 </div>
               ) : (
                 damage.damage_type && (
-                  <div key={generateKey(damage.damage_type)}>
+                  <div key={nanoid()}>
                     <button>
                       {damage.damage_type.name} {damage.damage_type.url}
                     </button>
@@ -127,13 +192,62 @@ export default function Actions({ actions }) {
     );
   };
 
+  const ActionWindow = () => {
+    return (
+      <ActionModal>
+        <section>
+          <button onClick={() => setActionModal(false)}>Close</button>
+          <h1>{actionState.action.name}</h1>
+          {!damageDealt ? (
+            <button
+              onClick={() => {
+                dispatch(attack(actionState));
+              }}
+            >
+              Roll 1d20
+              {actionState.action.attack_bonus > 0 && (
+                <span>+{actionState.action.attack_bonus}</span>
+              )}
+            </button>
+          ) : (
+            <>
+              {actionState.action.damage.map((damage) => (
+                <>
+                  {/* {JSON.stringify(damage.damage_dice)} */}
+                  <h3>{damage.damage_dice}</h3>
+                  <p>{damage.damage_type.name}</p>
+                </>
+              ))}
+              <button
+                onClick={() => {
+                  dispatch(rollDamage(actionState));
+                  setActionModal(false);
+                }}
+              >
+                ROLL
+              </button>
+            </>
+          )}
+        </section>
+      </ActionModal>
+    );
+  };
+
   return _actions.length ? (
-    <ActionsWrap>
-      <h1>Actions</h1>
-      {_actions.map((action) => (
-        <Action action={action} />
-      ))}
-    </ActionsWrap>
+    <>
+      {actionModal &&
+        actionState.action &&
+        ReactDOM.createPortal(
+          <ActionWindow />,
+          document.getElementById("action-root")
+        )}
+      <ActionsWrap>
+        <h1>Actions</h1>
+        {_actions.map((action) => (
+          <Action action={action} key={nanoid()} />
+        ))}
+      </ActionsWrap>
+    </>
   ) : (
     <p>No Actions</p>
   );
