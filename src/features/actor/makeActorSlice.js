@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid, createEntityAdapter } from "@reduxjs/toolkit";
 import { addMember } from "../teams/makeTeamSlice";
 
 const _monsterObject = {
@@ -345,6 +345,11 @@ const _monsterObject = {
   xp: 0, //The number of experience points (XP) a monster is worth is based on its challenge rating.
 };
 
+export const targetingAdapter = createEntityAdapter();
+export const targetingSelectors = targetingAdapter.getSelectors(
+  (state) => state.makeActor.targeting
+);
+
 const initialState = {
   id: nanoid(),
   teamId: "",
@@ -355,7 +360,7 @@ const initialState = {
   ac: 0,
   hp: 0,
   targetedBy: "",
-  targeting: [],
+  targeting: targetingAdapter.getInitialState(),
 };
 
 export const makeActorSlice = createSlice({
@@ -389,6 +394,7 @@ export const makeActorSlice = createSlice({
           actorPos,
           openInfo,
           targeting,
+          targetedBy,
         },
       }
     ) => {
@@ -401,27 +407,32 @@ export const makeActorSlice = createSlice({
       state.actorPos = actorPos;
       state.openInfo = openInfo;
       state.targeting = targeting;
+      state.targetedBy = targetedBy;
     },
     toggleTarget: (state, { payload: actor }) => {
       //make deep copy of the targeting array
-      let arrayCopy = JSON.parse(JSON.stringify(state.targeting));
+      let targetIds = targetingAdapter
+        .getSelectors()
+        .selectIds(state.targeting);
       //check if target is already targeted
       //we will use this to toggle the target state
       let isTargeted = 0;
-      for (let i in arrayCopy) {
-        if (arrayCopy[i].id === actor.id) {
+      for (let i in targetIds) {
+        if (targetIds[i] === actor.id) {
           isTargeted++;
         }
       }
       if (isTargeted) {
         //if target is in array we remove the target from the array
-        let newArray = arrayCopy.filter((target) => target.id !== actor.id);
-        state.targeting = newArray;
+        // let newArray = arrayCopy.filter((target) => target.id !== actor.id);
+        targetingAdapter.removeOne(state.targeting, actor.id);
+        // state.targeting = newArray;
       } else {
         //push target to array
         //set targeting array to new array
-        arrayCopy.push(actor);
-        state.targeting = arrayCopy;
+        targetingAdapter.addOne(state.targeting, actor);
+        // arrayCopy.push(actor);
+        // state.targeting = arrayCopy;
       }
     },
   },
@@ -433,7 +444,8 @@ export const makeActorSlice = createSlice({
   },
 });
 
-export const { setActorObject, loadActor, toggleTarget } = makeActorSlice.actions;
+export const { setActorObject, loadActor, toggleTarget } =
+  makeActorSlice.actions;
 
 export const actorObject = (state) => state.makeActor.actorObject;
 export const actorState = (state) => state.makeActor;

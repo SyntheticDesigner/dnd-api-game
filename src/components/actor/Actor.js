@@ -7,6 +7,7 @@ import {
   loadActor,
   actorState,
   toggleTarget,
+  targetingSelectors
 } from "../../features/actor/makeActorSlice";
 import { updateMember } from "../../features/teams/makeTeamSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +19,7 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
 
   const dispatch = useDispatch();
   const selectedActor = useSelector(actorState);
+  const targetedActors = useSelector(targetingSelectors.selectIds)
 
   useEffect(() => {
     if (selectedActor.id === actor.memberId) {
@@ -28,14 +30,14 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
       setSelected(false);
     }
     if (
-      selectedActor.targeting.filter((target) => target.id === actor.memberId)
-        .length > 0
+      targetedActors.filter((targetId) => targetId === actor.memberId).length > 0
     ) {
       setTargeted(true);
     } else {
       setTargeted(false);
     }
   }, [actor.memberId, selectedActor]);
+
 
   return (
     <>
@@ -55,7 +57,7 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
           e.preventDefault();
           dispatch(toggleTarget(actor.member));
         }}
-        x={teamIndex + 1}
+        x={(teamIndex + 1) * (teamIndex + 1)}
         y={memberIndex + 1}
         z={0}
         selected={selected}

@@ -1,6 +1,8 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { nanoid } from "@reduxjs/toolkit";
 
+import { resetAction } from "../action/actionSlice";
+
 export const teamsAdapter = createEntityAdapter();
 export const membersAdapter = createEntityAdapter();
 
@@ -61,7 +63,11 @@ export const teamSlice = createSlice({
     },
     updateMember: (state, { payload: member }) => {
       //update the members entity with the new member
-      membersAdapter.updateOne(state.members, {id: member.id, changes: member});
+      // console.log(member);
+      membersAdapter.updateOne(state.members, {
+        id: member.id,
+        changes: { member: member },
+      });
       //create a deep copy of the member's team member array
       const teamArray = JSON.parse(
         JSON.stringify(
@@ -69,13 +75,13 @@ export const teamSlice = createSlice({
         )
       );
       //map through the array updating the designated member
-      let updatedTeamArray = teamArray.map((teamMember)=>{
-        if(teamMember.memberId === member.id){
-          return {memberId: member.id, member: member};
-        }else{
-          return teamMember
+      let updatedTeamArray = teamArray.map((teamMember) => {
+        if (teamMember.memberId === member.id) {
+          return { memberId: member.id, member: member };
+        } else {
+          return teamMember;
         }
-      })
+      });
       //update the team with the new member array
       teamsAdapter.updateOne(state, {
         id: member.teamId,
@@ -117,6 +123,47 @@ export const teamSlice = createSlice({
       });
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(resetAction, (state, { payload: actionState }) => {
+      console.log(actionState.targets);
+      const targetEntities = actionState.targets.entities;
+      const targetIds = actionState.targets.ids;
+      console.log(targetIds);
+
+      targetIds.forEach((id) => {
+        console.log(targetEntities[id]);
+        membersAdapter.updateOne(state.members, {
+          id: id,
+          changes: { member: targetEntities[id] },
+        });
+      });
+      //update the members entity with the new member
+      // console.log(member);
+      // membersAdapter.updateOne(state.members, {
+      //   id: member.id,
+      //   changes: { member: member },
+      // });
+      // //create a deep copy of the member's team member array
+      // const teamArray = JSON.parse(
+      //   JSON.stringify(
+      //     teamsAdapter.getSelectors().selectById(state, member.teamId).members
+      //   )
+      // );
+      // //map through the array updating the designated member
+      // let updatedTeamArray = teamArray.map((teamMember) => {
+      //   if (teamMember.memberId === member.id) {
+      //     return { memberId: member.id, member: member };
+      //   } else {
+      //     return teamMember;
+      //   }
+      // });
+      // //update the team with the new member array
+      // teamsAdapter.updateOne(state, {
+      //   id: member.teamId,
+      //   changes: { members: updatedTeamArray },
+      // });
+    });
+  },
 });
 
 export const {
@@ -128,7 +175,7 @@ export const {
   setInspect,
   toggleInspect,
   removeMember,
-  updateMember
+  updateMember,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

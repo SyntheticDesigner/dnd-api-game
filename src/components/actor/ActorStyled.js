@@ -2,8 +2,10 @@ import styled from "styled-components";
 import { Token } from "../gameBoard/GameBoardStyle";
 
 export const ActorToken = styled(Token)`
-  grid-column: ${({ x }) => `${x} / ${x + 1}`};
-  grid-row: ${({ y }) => `${y} / ${y + 1}`};
+  grid-column: ${({ x }) => `${x + 1} / ${x + 2}`};
+  grid-row: ${({ y }) => `${y + 1} / ${y + 2}`};
+  padding: 4px;
+
   /* border: 4px solid red; */
   .actorWrap {
     height: 100%;

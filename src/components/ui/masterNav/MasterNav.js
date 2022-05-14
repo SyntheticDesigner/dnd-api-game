@@ -4,7 +4,7 @@ import MiniTeamMngr from "../teamMngr/MiniTeamMngr";
 import { CreateTeamBtnWrap, DndApiBtn, NavGrid, NavWrap, PlayBtn } from "./MasterNavStyle";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { srdState, teamMngrState, gameStartState, setSrd, toggleSrd, setTeamMngr, toggleTeamMngr, setGameStart, toggleGameStart } from "../../../features/uiController";
+import { srdState, teamMngrState, gameStartState, setSrd, toggleSrd, setTeamMngr, toggleTeamMngr, setGameStart, toggleGameStart } from "../../../features/ui/uiControlSlice";
 
 export default function MasterNav() {
   const [showApiNav, setShowApiNav] = useState(false);

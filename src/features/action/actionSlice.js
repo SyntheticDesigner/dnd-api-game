@@ -1,15 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { generateKey, rollDice } from "../../utils/utils";
+
+export const resultsAdapter = createEntityAdapter();
+export const targetsAdapter = createEntityAdapter();
+
+export const resultsSelectors = resultsAdapter.getSelectors(
+  (state) => state.action.attackResult
+);
+export const targetsSelectors = targetsAdapter.getSelectors(
+  (state) => state.action.attackResult
+);
 
 const initialState = {
   user: {},
-  targets: [],
   action: {},
   extraBonus: 0,
   attackRoll: 0,
   damageRoll: 0,
   hit: false,
-  attackResult: [],
+  targets: targetsAdapter.getInitialState(),
+  attackResults: resultsAdapter.getInitialState(),
+  startAction: false,
+  endAction: false,
 };
 
 const actionSlice = createSlice({
@@ -24,8 +36,9 @@ const actionSlice = createSlice({
       state.attackRoll = 0;
       state.damageRoll = 0;
       state.hit = false;
-      state.attackResult = [];
-
+      state.attackResults = resultsAdapter.getInitialState();
+      state.startAction = true;
+      state.endAction = false;
       if (action.attack_bonus >= 0) {
         console.log("attack");
       } else {
@@ -33,36 +46,78 @@ const actionSlice = createSlice({
       }
     },
     attack: (state, action) => {
-      console.log(action);
-      state.attackRoll = rollDice(`1d20+${state.action.attack_bonus}`);
-      if (state.targets.length < 1) {
+      let targets = targetsAdapter.getSelectors().selectEntities(state.targets);
+      let targetIds = targetsAdapter.getSelectors().selectIds(state.targets);
+      console.log(targets);
+      console.log(targetIds);
+      if (targetIds.length < 1) {
         alert("You do not have any targets");
       } else {
-        state.targets.forEach((target) => {
-          if (target.ac < state.attackRoll) {
+        state.attackRoll = rollDice(`1d20+${state.action.attack_bonus}`);
+        Object.keys(targets).forEach((id, i) => {
+          if (targets[id].ac < state.attackRoll) {
             console.log(state.attackRoll);
-            state.attackResult.push({ id: target.id, hit: true });
+            // state.attackResult.push({ id: target.id, hit: true, dmg: 0 });
+            resultsAdapter.addOne(state.attackResults, {
+              id: id,
+              hit: true,
+              dmg: 0,
+            });
             state.hit = true;
           } else {
             console.log("miss");
-            state.attackResult.push({ id: target.id, hit: false });
+            // state.attackResult.push({ id: target.id, hit: false, dmg: 0 });
+            resultsAdapter.addOne(state.attackResults, {
+              id: id,
+              hit: false,
+              dmg: 0,
+            });
           }
         });
       }
     },
     rollDamage: (state, action) => {
-      console.log(action);
       let currentDamage = state.damageRoll;
-      state.action.damage.forEach(element => {
-        currentDamage += rollDice(element.damage_dice)
+
+      console.log(action.payload.attackResults);
+
+      state.action.damage.forEach((element) => {
+        currentDamage += rollDice(element.damage_dice);
       });
 
+      let currentResults = resultsAdapter
+        .getSelectors()
+        .selectEntities(state.attackResults);
+      Object.keys(currentResults).forEach((id, i) => {
+        if (currentResults[id].hit) {
+          let target = targetsAdapter
+            .getSelectors()
+            .selectById(state.targets, id);
+          //make a deep clone of the target
+          console.log(JSON.stringify(target));
+          let targetClone = JSON.parse(JSON.stringify(target));
+          //subtract the damage from the hp
+          targetClone.hp = targetClone.hp - currentDamage;
+          console.log(targetClone.hp);
+          targetsAdapter.updateOne(state.targets, {
+            id: id,
+            changes: { hp: targetClone.hp },
+          });
+          //update the results with the damage
+          resultsAdapter.updateOne(state.attackResults, {
+            id: id,
+            changes: { dmg: currentDamage },
+          });
+        }
+      });
       state.damageRoll = currentDamage;
+      state.endAction = true;
     },
+    resetAction: () => initialState,
   },
 });
 
-export const { newAction, attack, rollDamage } = actionSlice.actions;
+export const { newAction, attack, rollDamage, resetAction } = actionSlice.actions;
 export const actionState = (state) => state.action;
 
 export default actionSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { Fragment, useCallback } from "react";
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { ActionDetailsWrapper, ActionModal, ActionsWrap } from "./ActionStyle";
@@ -15,6 +15,7 @@ import {
   attack,
   rollDamage,
   newAction,
+  resetAction,
 } from "../../features/action/actionSlice";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +25,7 @@ export default function Actions({ actions }) {
   const [_actions, set_Actions] = useState({});
   const [actionModal, setActionModal] = useState(false);
   const [damageDealt, setDamageDealt] = useState(false);
-  const [load, setLoad] = useState(false);
+  const [load, setLoad] = useState(0);
 
   const actionState = useSelector(_actionState);
   const actor = useSelector(actorState);
@@ -33,7 +34,6 @@ export default function Actions({ actions }) {
 
   useEffect(() => {
     actions && set_Actions(actions);
-    // console.log(actions);
   }, [actions]);
 
   // useEffect(() => {
@@ -51,34 +51,29 @@ export default function Actions({ actions }) {
   //   }
   // }, [load]);
 
-  const process = useCallback(() => {
-    console.log("in process");
-    console.log(actionState.damageRoll);
-    let test = actionState.attackResult.map(({ hit, id }) => {
-      console.log(hit);
-      if (hit) {
-        console.log(members);
-        console.log(id);
-        console.log(members[id].member);
-        dispatch(loadActor(members[id].member));
-      }
-    });
-  }, [actionState.attackResult, actionState.damageRoll, dispatch, members]);
+  // const process = useCallback((action) => {
+  //   if (load === 0) {
+  //     action.attackResult.forEach(({ hit, id }) => {
+  //       console.log(id);
+  //       dispatch(loadActor(members[id].member));
+  //     });
+  //   }
+  // });
 
   useEffect(() => {
-    console.log("hit or miss");
     if (actionState.hit) {
-      console.log(actionState.hit);
       setDamageDealt(true);
     } else {
       setDamageDealt(false);
     }
-    if (actionState.damageRoll > 0) {
-      setLoad(true);
-      console.log("call process");
-      process();
+    if (actionState.startAction && actionState.endAction) {
+      setActionModal(false);
+
+      console.log("ending turn");
+      dispatch(resetAction(actionState));
     }
-  }, [actionState, process]);
+    console.log("render action state");
+  }, [actionState]);
 
   const Action = ({ action }) => {
     const [openDetails, setOpenDetails] = useState(false);
@@ -201,7 +196,7 @@ export default function Actions({ actions }) {
           {!damageDealt ? (
             <button
               onClick={() => {
-                dispatch(attack(actionState));
+                dispatch(attack());
               }}
             >
               Roll 1d20
@@ -211,17 +206,17 @@ export default function Actions({ actions }) {
             </button>
           ) : (
             <>
-              {actionState.action.damage.map((damage) => (
-                <>
-                  {/* {JSON.stringify(damage.damage_dice)} */}
-                  <h3>{damage.damage_dice}</h3>
-                  <p>{damage.damage_type.name}</p>
-                </>
-              ))}
+              {actionState.startAction &&
+                actionState.action.damage.map((damage) => (
+                  <Fragment key={nanoid()}>
+                    {/* {JSON.stringify(damage.damage_dice)} */}
+                    <h3>{damage.damage_dice}</h3>
+                    <p>{damage.damage_type.name}</p>
+                  </Fragment>
+                ))}
               <button
                 onClick={() => {
                   dispatch(rollDamage(actionState));
-                  setActionModal(false);
                 }}
               >
                 ROLL
