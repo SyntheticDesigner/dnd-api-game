@@ -10,21 +10,24 @@ import {
   actorImage,
   actorState
 } from "../../features/actor/makeActorSlice";
-import { addMember } from "../../features/teams/makeTeamSlice";
+import { addMember, addFavorite } from "../../features/teams/makeTeamSlice";
 import RollModifier from "../ui/setPieces/RollModifier";
 import { nanoid } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
+import { teamSelected } from "../../features/ui/uiControlSlice";
 
 export default function Monster() {
   const monsterImg = useSelector(actorImage);
   const monster = useSelector(actorObject);
   const monState = useSelector(actorState);
 
+  const selectedTeam = useSelector(teamSelected)
+
   const dispatch = useDispatch();
   const params = useParams();
 
-  const addToTeam = () => {
-    dispatch(addMember({ teamId: params.teamId, member: monState }));
+  const addToFavorites = () => {
+    dispatch(addFavorite({ teamId: selectedTeam, member: monState }));
   };
   const conditionImmunities = monster.condition_immunities.length ? (
     <div className='fullLine'>
@@ -78,8 +81,8 @@ export default function Monster() {
   return (
     params.monsterId && monster.name && (
       <MonsterOverview>
-        <button className='addToTeam' onClick={addToTeam}>
-          Add to Team
+        <button className='addToTeam' onClick={addToFavorites}>
+          Add to Favorites
         </button>
         <img src={monsterImg} alt={monster.name} />
         <h1>{monster.name}</h1>

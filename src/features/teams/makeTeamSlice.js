@@ -19,10 +19,18 @@ export const teamSlice = createSlice({
   name: "teams",
   initialState: teamsAdapter.getInitialState({
     members: membersAdapter.getInitialState(),
-    playerFavorites: favoritesAdapter.getInitialState(),
   }),
   reducers: {
-    addTeam: teamsAdapter.addOne,
+    addTeam: (state, { payload: { id, name } }) => {
+      // console.log(payload);
+      teamsAdapter.addOne(state, {
+        id: id,
+        name: name,
+        favorites: favoritesAdapter.getInitialState(),
+        members: [],
+      });
+      // teamsAdapter.addOne
+    },
     deleteTeam: (state, { payload: teamId }) => {
       let members = teamsAdapter
         .getSelectors()
@@ -127,15 +135,21 @@ export const teamSlice = createSlice({
         changes: { inspect: !bool },
       });
     },
-    addFavorite: (state, { payload: { member } }) => {
+    addFavorite: (state, { payload: { teamId, member } }) => {
       const memberId = member.id;
       //make a deep clone of member
       const memberCopy = JSON.parse(JSON.stringify(member));
 
-      favoritesAdapter.addOne(state.playerFavorites, {
-        id: memberId,
-        member: memberCopy,
-      });
+      const favoritesState = teamsAdapter
+        .getSelectors()
+        .selectById(state, teamId).favorites;
+
+      const newState = favoritesAdapter.addOne(favoritesState, member);
+      teamsAdapter.updateOne(state, {id: teamId, changes: {favorites: newState}});
+      // favoritesAdapter.addOne(state.playerFavorites, {
+      //   id: memberId,
+      //   member: memberCopy,
+      // });
     },
     removeFavorite: (state, { payload: memberId }) => {
       favoritesAdapter.removeOne(state.playerFavorites, memberId);
@@ -194,6 +208,7 @@ export const {
   toggleInspect,
   removeMember,
   updateMember,
+  addFavorite
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

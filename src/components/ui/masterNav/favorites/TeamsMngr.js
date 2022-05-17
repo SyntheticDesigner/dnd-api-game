@@ -99,7 +99,7 @@ export default function TeamsMngr() {
         console.log("test");
         alert("Someone already has this name try another");
       } else {
-        dispatch(addTeam({ id: _id, name: teamName, members: [] }));
+        dispatch(addTeam({ id: _id, name: teamName }));
         dispatch(setTeamSelected(_id));
         setTeamName("");
       }

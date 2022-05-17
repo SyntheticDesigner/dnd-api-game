@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ApiNav from "../apiNav/ApiNav";
 import {
   LifeCountWrap,
   NavGrid,
@@ -9,7 +8,6 @@ import {
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import heartFrame from "../../../assets/icons/heart-frame.png";
 import close from "../../../assets/icons/close-x.svg";
 
@@ -18,7 +16,7 @@ import Records from "./records/Records";
 import Manage from "./manage/Manage";
 
 export default function MasterNav() {
-  const [showApiNav, setShowApiNav] = useState(false);
+  const [showApiNav, setShowApiNav] = useState(true);
   const [showMiniMngr, setShowMiniMngr] = useState(false);
   const [hovApiNav, setHovApiNav] = useState(false);
   const navigate = useNavigate();
@@ -36,14 +34,9 @@ export default function MasterNav() {
 
   return (
     <>
-    {}
+      {}
       <NavWrap>
         <NavGrid>
-          <ApiNav
-            open={showApiNav}
-            setHovApiNav={setHovApiNav}
-            hovApiNav={hovApiNav}
-          />
           <Menu />
           <LifeCounter />
           <Records />

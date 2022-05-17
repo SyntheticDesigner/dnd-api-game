@@ -24,13 +24,7 @@ export default function MonsterList({ data, setMonsterUrl }) {
       {data.map((data) => (
         <li key={data.index}>
           <button
-            onClick={() =>
-              navigate(
-                `/monsters/${params.teamId !== "null" ? params.teamId : "null"}/${
-                  data.index
-                }/`
-              )
-            }
+            onClick={() => navigate(`/monsters/${data.index}/`)}
             img={`https://5e.tools/img/MM/${data.name
               .split(",")[0]
               .split("/")[0]

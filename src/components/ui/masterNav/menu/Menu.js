@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import ReactDOM from "react-dom";
+import ApiNav from "../../apiNav/ApiNav";
+
 //import redux control
 import {
   expandedMenuState,
@@ -9,6 +11,7 @@ import {
   toggleSrd,
   toggleExpandedMenu,
   teamMngrState,
+  srdState
 } from "../../../../features/ui/uiControlSlice";
 //import styles
 import {
@@ -29,6 +32,7 @@ export default function Menu() {
 
   const expandedMenu = useSelector(expandedMenuState);
   const openTeamMngr = useSelector(teamMngrState);
+  const openSrdContent = useSelector(srdState);
 
   const TeamMngrBtn = () => {
     const dispatch = useDispatch();
@@ -61,6 +65,11 @@ export default function Menu() {
       {openTeamMngr &&
         ReactDOM.createPortal(
           <TeamsMngr />,
+          document.getElementById("menu-root")
+        )}
+      {openSrdContent &&
+        ReactDOM.createPortal(
+          <ApiNav />,
           document.getElementById("menu-root")
         )}
       <ExpandedMenu />
