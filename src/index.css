@@ -1,30 +1,48 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   list-style: none;
 }
 
-:root{
+:root {
   --tan: tan;
   --darkTan: rgb(36, 33, 29);
   --font-light: white;
-  --font-color-brand: rgb(255, 255, 255);
+  --font-color-brand: #fff8bd;
 
-  --bg-tag: rgb(105, 90, 69);
-  --bg-char: rgb(88, 74, 54);
-  --bg-dark: rgb(57, 48, 35);
-  --bg-medium: rgb(56, 51, 44);
-  --bg-light: rgb(103, 93, 78);
+  --bg-dark: #2e0d0d;
+  --bg-medium: #421212;
+  --bg-light: #685252;
+
+  --bg-char: var(--bg-dark);
+
+  --bg-tag: var(--bg-medium);
   --bg-overlay: hsla(0, 0%, 50%, 0.5);
 
   --dark-border: hsla(360, 50%, 30%, 1);
   --medium-border: hsl(0, 61%, 45%);
-  --selected-border: hsla(123, 100%, 29%, 0.5);
+  --selected-border: rgb(10, 207, 0);
   --targeted-border: hsla(0, 100%, 50%, 0.5);
 }
 
-button{
+#overlay-root {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  overflow: hidden;
+}
+
+#menu-root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  padding-top: 120px;
+  justify-content: center;
+  position: absolute;
+}
+
+button {
   padding: 4px;
   margin: 4px;
   font-size: 1em;

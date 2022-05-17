@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Board, GameBoardWrapper } from "./GameBoardStyle";
+import { Board, GameBoardWrapper, Map } from "./GameBoardStyle";
 import {
   teamsSelectors,
   membersSelectors,
@@ -31,19 +31,19 @@ export default function GameBoard() {
   }, [packedTeams, packedMembers]);
 
   return (
-    <GameBoardWrapper>
-      <Board>
-        {teams.map((team, teamIndex) =>
-          team.members.map((member, memberIndex) => (
+    <GameBoardWrapper id="gameBoardPos">
+        <Board>
+          {teams.map((team, teamIndex) =>
+            team.members.map((member, memberIndex) => (
               <Actor
                 key={memberIndex}
                 actor={member}
                 memberIndex={memberIndex}
                 teamIndex={teamIndex}
-              /> 
-          ))
-        )}
-      </Board>
+              />
+            ))
+          )}
+        </Board>
     </GameBoardWrapper>
   );
 }

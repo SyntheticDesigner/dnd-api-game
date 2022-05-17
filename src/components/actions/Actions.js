@@ -68,7 +68,6 @@ export default function Actions({ actions }) {
     }
     if (actionState.startAction && actionState.endAction) {
       setActionModal(false);
-
       console.log("ending turn");
       dispatch(resetAction(actionState));
     }

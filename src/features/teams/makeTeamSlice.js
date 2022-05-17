@@ -5,16 +5,21 @@ import { resetAction } from "../action/actionSlice";
 
 export const teamsAdapter = createEntityAdapter();
 export const membersAdapter = createEntityAdapter();
+export const favoritesAdapter = createEntityAdapter();
 
 export const teamsSelectors = teamsAdapter.getSelectors((state) => state.teams);
 export const membersSelectors = membersAdapter.getSelectors(
   (state) => state.teams.members
+);
+export const favoritesSelectors = favoritesAdapter.getSelectors(
+  (state) => state.teams.playerFavorites
 );
 
 export const teamSlice = createSlice({
   name: "teams",
   initialState: teamsAdapter.getInitialState({
     members: membersAdapter.getInitialState(),
+    playerFavorites: favoritesAdapter.getInitialState(),
   }),
   reducers: {
     addTeam: teamsAdapter.addOne,
@@ -121,6 +126,19 @@ export const teamSlice = createSlice({
         id: teamId,
         changes: { inspect: !bool },
       });
+    },
+    addFavorite: (state, { payload: { member } }) => {
+      const memberId = member.id;
+      //make a deep clone of member
+      const memberCopy = JSON.parse(JSON.stringify(member));
+
+      favoritesAdapter.addOne(state.playerFavorites, {
+        id: memberId,
+        member: memberCopy,
+      });
+    },
+    removeFavorite: (state, { payload: memberId }) => {
+      favoritesAdapter.removeOne(state.playerFavorites, memberId);
     },
   },
   extraReducers: (builder) => {

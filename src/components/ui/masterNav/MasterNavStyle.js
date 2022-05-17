@@ -15,12 +15,16 @@ export const NavWrap = styled.nav`
   }
 `;
 
-export const NavGrid = styled.ul`
+export const NavGrid = styled.div`
   display: grid;
   width: 100%;
   height: 100%;
-  grid-template-columns: repeat(auto-fill, 50px);
-  grid-template-rows: repeat(auto-fill, 50px);
+  grid-template-columns: 80px 1fr 80px 1fr 80px;
+  grid-template-rows: 80px 1fr 80px 1fr 80px;
+  gap: auto;
+  ul {
+    transition: all 0.3s;
+  }
   & li {
     display: flex;
     justify-content: center;
@@ -28,57 +32,36 @@ export const NavGrid = styled.ul`
   }
 `;
 
-export const DndApiBtn = styled.button`
-  display: flex;
-  align-items: center;
-  background: none;
+export const LifeCountWrap = styled.button`
+  grid-column: 5 / 6;
   border: none;
-  position: relative;
-  z-index: 2;
-  transition: all 0.5s;
-  height: 40px;
-  &::after {
-    content: "";
-    position: absolute;
-    height: 33px;
-    width: 33px;
-    left: 7px;
-    border-radius: 50%;
-    box-shadow: 0px 3px 8px hsla(0, 0%, 0%, 1);
-    z-index: -1;
+  outline: none;
+  background: none;
+  transition: all 0.3s;
+  /* &:hover .imgWrap{
+    transform: scale(1.1);
   }
-  img {
-    height: 40px;
-    width: 40px;
-  }
-  p {
-    margin-left: 8px;
-    display: none;
-    position: absolute;
-    color: hsla(360, 80%, 60%, 1);
-    font-weight: bold;
-    font-size: 1.2em;
-    text-shadow: -1px 1px 0 white, 1px 1px 0 white, 1px -1px 0 white,
-      -1px -1px 0 white;
-    left: 50%;
-    top: 100%;
-    transform: translateX(-65%);
-  }
-  &:hover {
-    transform: scale(1.2);
-    p {
-      line-height: 1em;
-      display: inline-block;
+  &:active .imgWrap{
+    transform: scale(1);
+  } */
+  .imgWrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    transition: all 0.3s;
+    #heartIcon {
+      height: 110%;
+      z-index: 1;
+      margin-bottom: -16px;
     }
-  }
-  &:active {
-    transition: transform 0.2s;
-    transform: scale(0.9);
   }
 `;
 
 export const CreateTeamBtnWrap = styled.li`
-  grid-column: 2 /4;
+  /* grid-column: 2 /4; */
   & button {
     font-size: 14px;
     font-weight: bold;
@@ -89,6 +72,6 @@ export const CreateTeamBtnWrap = styled.li`
   }
 `;
 
-export const PlayBtn = styled.li`
-  
-`;
+
+
+export const PlayBtn = styled.li``;

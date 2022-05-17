@@ -3,7 +3,8 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import { Outlet } from "react-router-dom";
 import GameBoard from "./components/gameBoard/GameBoard";
 import MasterNav from "./components/ui/masterNav/MasterNav";
-import { AppWrap } from "./StyledComponents";
+import { AppWrap, RecordsWrapper } from "./StyledComponents";
+import { getData } from "./utils/utils";
 
 function App() {
   const [links, setLinks] = useState({});
@@ -50,11 +51,12 @@ function App() {
     <></>
   );
 
+
   return (
     <AppWrap>
-      <MasterNav/>
+      <MasterNav />
       <Outlet context={[apiUrl, setApiUrl]} />
-      <GameBoard/>
+      <GameBoard />
     </AppWrap>
   );
 }
