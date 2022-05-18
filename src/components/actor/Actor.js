@@ -127,8 +127,8 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
         targeted={targeted}
       >
         <div className='actorWrap'>
-          {actor.member.hp < 1 && <img src={skull} alt="nothing loading" />}
-          <img src={actor.member.actorImage} alt='' />
+          {actor.member.hp < 1 && <img className="skull" src={skull} alt="nothing loading" />}
+          <img className="actorTokenImg" src={actor.member.actorImage} alt='' />
         </div>
         <TokenMenu />
       </ActorToken>

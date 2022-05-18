@@ -397,7 +397,9 @@ export const makeActorSlice = createSlice({
           openInfo,
           targeting,
           targetedBy,
-          targetMode
+          targetMode,
+          ac,
+          hp,
         },
       }
     ) => {
@@ -412,6 +414,8 @@ export const makeActorSlice = createSlice({
       state.targeting = targeting;
       state.targetedBy = targetedBy;
       state.targetMode = targetMode;
+      state.ac = ac;
+      state.hp = hp;
       console.log(targetMode);
     },
     toggleTarget: (state, { payload: actor }) => {
@@ -440,12 +444,12 @@ export const makeActorSlice = createSlice({
         // state.targeting = arrayCopy;
       }
     },
-    setTargetMode: (state, { payload }) =>{
+    setTargetMode: (state, { payload }) => {
       state.targetMode = payload;
     },
-    toggleTargetMode: (state, action) =>{
+    toggleTargetMode: (state, action) => {
       state.targetMode = !state.targetMode;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(addMember, (state, action) => {
@@ -472,8 +476,13 @@ export const makeActorSlice = createSlice({
   },
 });
 
-export const { setActorObject, loadActor, toggleTarget, setTargetMode, toggleTargetMode } =
-  makeActorSlice.actions;
+export const {
+  setActorObject,
+  loadActor,
+  toggleTarget,
+  setTargetMode,
+  toggleTargetMode,
+} = makeActorSlice.actions;
 
 export const actorObject = (state) => state.makeActor.actorObject;
 export const actorState = (state) => state.makeActor;

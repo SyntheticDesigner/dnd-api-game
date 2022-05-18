@@ -48,9 +48,10 @@ const actionSlice = createSlice({
     attack: (state, action) => {
       let targets = targetsAdapter.getSelectors().selectEntities(state.targets);
       let targetIds = targetsAdapter.getSelectors().selectIds(state.targets);
-      console.log(targets);
-      console.log(targetIds);
-      if (targetIds.length < 1) {
+      // console.log(actor)
+      if(state.user.hp < 1 ){
+        alert("This Character is unconscious and can not attack right now")
+      }else if (targetIds.length < 1) {
         alert("You do not have any targets");
       } else {
         state.attackRoll = rollDice(`1d20+${state.action.attack_bonus}`);

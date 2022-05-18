@@ -15,6 +15,9 @@ export const ActorToken = styled(Token)`
     position: relative;
     border-radius: 50%;
     z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &::before {
       content: "";
@@ -24,6 +27,7 @@ export const ActorToken = styled(Token)`
       width: calc(100% - 8px);
       background-color: var(--bg-at-overlay);
       z-index: 1;
+      margin: auto;
       border: ${({ selected, targeted }) =>
         selected
           ? `4px solid var(--selected-border)`
@@ -32,11 +36,19 @@ export const ActorToken = styled(Token)`
           : `4px solid var(--bg-at-overlay)`};
       border-radius: 50%;
     }
-    img {
+    .actorTokenImg {
       height: 100%;
       box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.5);
       border-radius: 50%;
       position: absolute;
+    }
+    .skull {
+      position: absolute;
+      z-index: 1;
+      height: 80%;
+      opacity: 0.80;
+      margin-top: 2px;
+      margin-left: 2px;
     }
   }
 `;
