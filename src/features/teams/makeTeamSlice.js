@@ -5,15 +5,17 @@ import { resetAction } from "../action/actionSlice";
 
 export const teamsAdapter = createEntityAdapter();
 export const membersAdapter = createEntityAdapter();
-export const favoritesAdapter = createEntityAdapter();
+export const favoritesAdapter = createEntityAdapter({
+  selectId: (member) => member.actorObject.index,
+  sortComparer: (a, b) =>
+    a.actorObject.index.localeCompare(b.actorObject.index),
+});
 
 export const teamsSelectors = teamsAdapter.getSelectors((state) => state.teams);
 export const membersSelectors = membersAdapter.getSelectors(
   (state) => state.teams.members
 );
-export const favoritesSelectors = favoritesAdapter.getSelectors(
-  (state) => state.teams.playerFavorites
-);
+//access the favorites through the teams selector state.teams.entities[teamId].favorites
 
 export const teamSlice = createSlice({
   name: "teams",
@@ -46,14 +48,14 @@ export const teamSlice = createSlice({
     },
     updateTeam: teamsAdapter.updateOne,
     addMember: (state, { payload: { teamId, member } }) => {
-      const memberId = member.id;
       //make a deep clone of member
       const memberCopy = JSON.parse(JSON.stringify(member));
       //give the member its teamId
       memberCopy.teamId = teamId;
+      memberCopy.id = nanoid();
       //create random ID
       membersAdapter.addOne(state.members, {
-        id: memberId,
+        id: memberCopy.id,
         teamId: teamId,
         member: memberCopy,
       });
@@ -64,7 +66,7 @@ export const teamSlice = createSlice({
         )
       );
       //create a deep clone of the array that tracks the members for each team
-      teamArray.push({ memberId: memberId, member: memberCopy });
+      teamArray.push({ memberId: memberCopy.id, member: memberCopy });
       //push the new memberId to the array
       //this is how we connect the members to their team
       //the member should know its teamId and the team knows its memberIds
@@ -136,20 +138,27 @@ export const teamSlice = createSlice({
       });
     },
     addFavorite: (state, { payload: { teamId, member } }) => {
-      const memberId = member.id;
-      //make a deep clone of member
-      const memberCopy = JSON.parse(JSON.stringify(member));
+      if (teamId) {
+        const memberId = member.id;
+        //make a deep clone of member
+        const memberCopy = JSON.parse(JSON.stringify(member));
 
-      const favoritesState = teamsAdapter
-        .getSelectors()
-        .selectById(state, teamId).favorites;
+        const favoritesState = teamsAdapter
+          .getSelectors()
+          .selectById(state, teamId).favorites;
 
-      const newState = favoritesAdapter.addOne(favoritesState, member);
-      teamsAdapter.updateOne(state, {id: teamId, changes: {favorites: newState}});
-      // favoritesAdapter.addOne(state.playerFavorites, {
-      //   id: memberId,
-      //   member: memberCopy,
-      // });
+        const newState = favoritesAdapter.addOne(favoritesState, member);
+        teamsAdapter.updateOne(state, {
+          id: teamId,
+          changes: { favorites: newState },
+        });
+        // favoritesAdapter.addOne(state.playerFavorites, {
+        //   id: memberId,
+        //   member: memberCopy,
+        // });
+      } else {
+        alert("You must make or choose a team");
+      }
     },
     removeFavorite: (state, { payload: memberId }) => {
       favoritesAdapter.removeOne(state.playerFavorites, memberId);
@@ -164,6 +173,24 @@ export const teamSlice = createSlice({
 
       targetIds.forEach((id) => {
         console.log(targetEntities[id]);
+        const teamArray = JSON.parse(
+          JSON.stringify(
+            teamsAdapter.getSelectors().selectById(state, targetEntities[id].teamId).members
+          )
+        );
+        //map through the array updating the designated member
+        let updatedTeamArray = teamArray.map((teamMember) => {
+          if (teamMember.memberId === id) {
+            return { memberId: id, member: targetEntities[id] };
+          } else {
+            return teamMember;
+          }
+        });
+        teamsAdapter.updateOne(state, {
+          id: targetEntities[id].teamId,
+          changes: { members: updatedTeamArray },
+        });
+
         membersAdapter.updateOne(state.members, {
           id: id,
           changes: { member: targetEntities[id] },
@@ -208,7 +235,7 @@ export const {
   toggleInspect,
   removeMember,
   updateMember,
-  addFavorite
+  addFavorite,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

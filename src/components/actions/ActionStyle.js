@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const ActionsWrap = styled.section`
+grid-column: 1 / 6;
+width: 100%;
   & h1 {
     font-size: 1.2em;
     color: var(--font-color-brand);
@@ -15,6 +17,7 @@ export const ActionsWrap = styled.section`
     margin: 16px 0 8px;
     display: flex;
     cursor: pointer;
+    width: 100%;
     & h2 {
       font-size: 1em;
       border-left: 4px solid var(--medium-border);

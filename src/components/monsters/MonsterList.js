@@ -6,6 +6,7 @@ import {
   SmallImg,
 } from "./MonsterPageStyles";
 import { useNavigate, useParams } from "react-router-dom";
+import CloseBtn from "../ui/setPieces/CloseBtn";
 export default function MonsterList({ data, setMonsterUrl }) {
   const [listOpen, setListOpen] = useState(true);
   const params = useParams();
@@ -18,9 +19,12 @@ export default function MonsterList({ data, setMonsterUrl }) {
   let navigate = useNavigate();
   return (
     <ListWrap open={listOpen}>
-      <MonsterListBtn onClick={() => setListOpen(!listOpen)}>
-        Monsters {listOpen ? <span>▲</span> : <span>▼</span>}
-      </MonsterListBtn>
+      <div className='flexMonsterListBtn'>
+        <MonsterListBtn onClick={() => setListOpen(!listOpen)}>
+          Monsters
+        </MonsterListBtn>
+        {listOpen && <CloseBtn click={() => navigate("/")} />}
+      </div>
       {data.map((data) => (
         <li key={data.index}>
           <button

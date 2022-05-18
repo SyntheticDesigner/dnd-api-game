@@ -6,6 +6,8 @@ import MasterNav from "./components/ui/masterNav/MasterNav";
 import { AppWrap, RecordsWrapper } from "./StyledComponents";
 import { getData } from "./utils/utils";
 
+import ReactDOM from "react-dom";
+
 function App() {
   const [links, setLinks] = useState({});
   const [page, setPage] = useState("");
@@ -51,12 +53,15 @@ function App() {
     <></>
   );
 
-
   return (
     <AppWrap>
       <MasterNav />
-      <Outlet context={[apiUrl, setApiUrl]} />
       <GameBoard />
+
+      {ReactDOM.createPortal(
+        <Outlet context={[apiUrl, setApiUrl]} />,
+        document.getElementById("api-root")
+      )}
     </AppWrap>
   );
 }

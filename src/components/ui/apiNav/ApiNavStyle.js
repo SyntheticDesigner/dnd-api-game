@@ -6,6 +6,7 @@ export const ApiNavWrap = styled.ul`
   list-style: none;
   grid-template-columns: repeat(2, auto);
   width: 60%;
+  max-width: 300px;
   height: 100vh;
   position: absolute;
   top: 0;

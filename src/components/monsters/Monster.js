@@ -8,20 +8,23 @@ import {
   setMonsterObject,
   actorObject,
   actorImage,
-  actorState
+  actorState,
 } from "../../features/actor/makeActorSlice";
 import { addMember, addFavorite } from "../../features/teams/makeTeamSlice";
 import RollModifier from "../ui/setPieces/RollModifier";
 import { nanoid } from "@reduxjs/toolkit";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { teamSelected } from "../../features/ui/uiControlSlice";
+import CloseBtn from "../ui/setPieces/CloseBtn";
 
 export default function Monster() {
   const monsterImg = useSelector(actorImage);
   const monster = useSelector(actorObject);
   const monState = useSelector(actorState);
 
-  const selectedTeam = useSelector(teamSelected)
+  const navigate = useNavigate();
+
+  const selectedTeam = useSelector(teamSelected);
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -79,62 +82,66 @@ export default function Monster() {
   );
 
   return (
-    params.monsterId && monster.name && (
-      <MonsterOverview>
-        <button className='addToTeam' onClick={addToFavorites}>
-          Add to Favorites
-        </button>
-        <img src={monsterImg} alt={monster.name} />
-        <h1>{monster.name}</h1>
-        <h3 title='Challenge Rating indicates a level of difficulty'>
-          CR: <br /> {monster.challenge_rating}
-        </h3>
-        <h3 title='AC: Armor Class - An attack roll must be at least this high to hit.'>
-          AC: <br /> {monster.armor_class}
-        </h3>
-        <HitPoints>
-          <p>{monster.hit_dice}</p>
-          {monster.hit_points}
-        </HitPoints>
-        <h4 className='fullLine'>({monster.alignment})</h4>
-        {/* <p>Size: {monster.size}</p> */}
-        <div className='abilityScore'>
-          <p>
-            Int: <br /> {monster.intelligence}
-          </p>
-          <RollModifier score={monster.intelligence} />
-        </div>
-        <div className='abilityScore'>
-          <p>
-            Wis: <br /> {monster.wisdom}
-          </p>
-          <RollModifier score={monster.wisdom} />
-        </div>
-        <div className='abilityScore'>
-          <p>
-            Str: <br /> {monster.strength}
-          </p>
-          <RollModifier score={monster.strength} />
-        </div>
-        <div className='abilityScore'>
-          <p>
-            Dex: <br /> {monster.dexterity}
-          </p>
-          <RollModifier score={monster.dexterity} />
-        </div>
-        <div className='abilityScore'>
-          <p>
-            Char: <br /> {monster.charisma}
-          </p>
-          <RollModifier score={monster.charisma} />
-        </div>
-        {conditionImmunities}
-        {damageImmunities}
-        {damageResistances}
-        {damageVulnerabilities}
+    params.monsterId &&
+    monster.name && (
+      <>
+        <MonsterOverview>
+          <button className='addToTeam' onClick={addToFavorites}>
+            Add to Favorites
+          </button>
+          <img src={monsterImg} alt={monster.name} />
+          <h1>{monster.name}</h1>
+          <h3 title='Challenge Rating indicates a level of difficulty'>
+            CR: <br /> {monster.challenge_rating}
+          </h3>
+          <h3 title='AC: Armor Class - An attack roll must be at least this high to hit.'>
+            AC: <br /> {monster.armor_class}
+          </h3>
+          <HitPoints>
+            <p>{monster.hit_dice}</p>
+            {monster.hit_points}
+          </HitPoints>
+          <h4 className='fullLine'>({monster.alignment})</h4>
+          {/* <p>Size: {monster.size}</p> */}
+          <div className='abilityScore'>
+            <p>
+              Int: <br /> {monster.intelligence}
+            </p>
+            <RollModifier score={monster.intelligence} />
+          </div>
+          <div className='abilityScore'>
+            <p>
+              Wis: <br /> {monster.wisdom}
+            </p>
+            <RollModifier score={monster.wisdom} />
+          </div>
+          <div className='abilityScore'>
+            <p>
+              Str: <br /> {monster.strength}
+            </p>
+            <RollModifier score={monster.strength} />
+          </div>
+          <div className='abilityScore'>
+            <p>
+              Dex: <br /> {monster.dexterity}
+            </p>
+            <RollModifier score={monster.dexterity} />
+          </div>
+          <div className='abilityScore'>
+            <p>
+              Char: <br /> {monster.charisma}
+            </p>
+            <RollModifier score={monster.charisma} />
+          </div>
+          {conditionImmunities}
+          {damageImmunities}
+          {damageResistances}
+          {damageVulnerabilities}
 
-        {monster.actions && <Actions actions={monster.actions} />}
-      </MonsterOverview>
+          {monster.actions && <Actions actions={monster.actions} />}
+        </MonsterOverview>
+        <CloseBtn click={() => navigate(-1)} />
+      </>
     )
   );
 }

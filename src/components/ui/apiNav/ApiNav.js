@@ -3,6 +3,8 @@ import { getData } from "../../../utils/utils";
 //------------------------------------------------------
 import { useNavigate } from "react-router-dom";
 import { ApiNavWrap } from "./ApiNavStyle";
+import { useDispatch } from "react-redux";
+import { setSrd } from "../../../features/ui/uiControlSlice";
 
 export default function ApiNav({ open, hovApiNav, setHovApiNav }) {
   const [links, setLinks] = useState({});
@@ -11,7 +13,7 @@ export default function ApiNav({ open, hovApiNav, setHovApiNav }) {
   const [pageContentLink, setPageContentLink] = useState("");
   const [pageContent, setPageContent] = useState("");
   let navigate = useNavigate();
-
+  const dispatch = useDispatch()
   useEffect(() => {
     getData().then((res) => {
       setLinks(res);
@@ -28,13 +30,14 @@ export default function ApiNav({ open, hovApiNav, setHovApiNav }) {
       });
   }, [page, pageContentLink]);
   return (
-    <ApiNavWrap open={open} onMouseEnter={()=>setHovApiNav(!hovApiNav)} onMouseLeave={()=>setHovApiNav(!hovApiNav)}>
+    <ApiNavWrap>
       {Object.keys(links).map((keyName, i) => (
         <li key={keyName} style={{ margin: "auto", fontSize: "14px" }}>
           <button
             onClick={() => {
               setPage(links[keyName]);
               navigate(`/${keyName}`);
+              dispatch(setSrd(false));
               //   setPageIndex(keyName);
             }}
           >

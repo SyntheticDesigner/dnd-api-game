@@ -1,19 +1,13 @@
 import styled from "styled-components";
 
 export const PageWrap = styled.div`
-  position: relative;
-  background-color: lightblue;
-  /* display: flex; */
-  height: calc(100vh - 16px);
-  width: calc(100% - 16px);
   position: fixed;
-  padding: 58px 0px;
+  padding: 100px 0px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 8px;
-  background-color: hsla(0, 0%, 20%, 0.8);
   color: white;
   z-index: 1;
 `;
@@ -22,7 +16,7 @@ export const ListWrap = styled.ul`
   height: fit-content;
   max-height: 60vh;
   overflow-y: scroll;
-  width: calc(100% - 16px);
+  width: ${({ open }) => (open ? `calc(100% - 16px)` : `fit-content`)};
   list-style: none;
   background-color: hsla(0, 0%, 20%, 0.8);
   border: 4px solid hsla(0, 0%, 23%, 1);
@@ -100,6 +94,24 @@ export const ListWrap = styled.ul`
       }
     }
   }
+  .flexMonsterListBtn{
+    width: 100%;
+    background-color: var(--bg-medium);
+    padding: 4px;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+  }
+`;
+
+export const MonsterListBtn = styled.button`
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: var(--font-color-brand);
+  flex-grow: 1;
 `;
 
 export const SmallImg = styled.img`
@@ -107,14 +119,25 @@ export const SmallImg = styled.img`
 `;
 
 export const MonsterOverview = styled.div`
-  width: 100%;
+  width: 95%;
+  height: 76vh;
   position: absolute;
-  top: 120px;
-  z-index: -1;
-  padding: 4px 16px;
+  top: 80px;
+  padding: 32px 16px;
   display: grid;
   grid-template-columns: 19% 21% 20% 21% 19%;
   padding-bottom: 58px;
+  overflow-y: scroll;
+  z-index: 0;
+  background: linear-gradient(
+      180deg,
+      #bf953f -65.02%,
+      #fcf6ba -26.35%,
+      #b38728 20.06%,
+      #fbf5b7 63.88%,
+      #aa771c 99.98%
+    ),
+    #595959;
   & > img {
     grid-column: 2 / 5;
     grid-row: 2 / 3;
@@ -189,6 +212,21 @@ export const MonsterOverview = styled.div`
     font-size: 1.2em;
     margin-bottom: 8px;
   }
+  &::before {
+    content: "";
+    /* height: calc(100% - 4px); */
+    /* width: calc(100% - 4px); */
+    width: calc(95% - 4px);
+    height: calc(76vh - 4px);
+    margin: auto;
+    background-color: var(--bg-medium);
+    position: fixed;
+    top: 4px;
+    bottom: 4px;
+    right: 4px;
+    left: 4px;
+    z-index: -1;
+  }
 `;
 
 export const HitPoints = styled.button`
@@ -207,12 +245,7 @@ export const HitPoints = styled.button`
   height: 80px;
   width: 80px;
   transform: translate(-16px, -8px);
-  p{
+  p {
     margin-top: -8px;
   }
-`;
-
-export const MonsterListBtn = styled.button`
-  font-weight: bold;
-  margin-left: auto;
 `;

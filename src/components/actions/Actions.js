@@ -77,7 +77,7 @@ export default function Actions({ actions }) {
   const Action = ({ action }) => {
     const [openDetails, setOpenDetails] = useState(false);
     return (
-      <div>
+      <>
         <div className='actionName'>
           <h2 onClick={() => setOpenDetails(!openDetails)}>
             {action.name} <div className='arrow'>{openDetails ? "▲" : "▼"}</div>{" "}
@@ -93,7 +93,7 @@ export default function Actions({ actions }) {
           </button>
         </div>
         {openDetails && <ActionDetails action={action} />}
-      </div>
+      </>
     );
   };
 

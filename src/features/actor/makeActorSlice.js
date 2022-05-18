@@ -1,5 +1,6 @@
 import { createSlice, nanoid, createEntityAdapter } from "@reduxjs/toolkit";
-import { addMember } from "../teams/makeTeamSlice";
+import { resetAction } from "../action/actionSlice";
+import { addMember, addFavorite } from "../teams/makeTeamSlice";
 
 const _monsterObject = {
   index: "", // Resource index for shorthand searching.
@@ -361,6 +362,7 @@ const initialState = {
   hp: 0,
   targetedBy: "",
   targeting: targetingAdapter.getInitialState(),
+  targetMode: false,
 };
 
 export const makeActorSlice = createSlice({
@@ -395,6 +397,7 @@ export const makeActorSlice = createSlice({
           openInfo,
           targeting,
           targetedBy,
+          targetMode
         },
       }
     ) => {
@@ -408,6 +411,8 @@ export const makeActorSlice = createSlice({
       state.openInfo = openInfo;
       state.targeting = targeting;
       state.targetedBy = targetedBy;
+      state.targetMode = targetMode;
+      console.log(targetMode);
     },
     toggleTarget: (state, { payload: actor }) => {
       //make deep copy of the targeting array
@@ -435,21 +440,45 @@ export const makeActorSlice = createSlice({
         // state.targeting = arrayCopy;
       }
     },
+    setTargetMode: (state, { payload }) =>{
+      state.targetMode = payload;
+    },
+    toggleTargetMode: (state, action) =>{
+      state.targetMode = !state.targetMode;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(addMember, (state, action) => {
       state.id = nanoid();
       //generate a new unique id each time the actor is added to a team
     });
+    builder.addCase(addFavorite, (state, action) => {
+      state.id = nanoid();
+      //generate a new unique id each time the actor is added to favorites
+    });
+    builder.addCase(resetAction, (state, { payload: actionState }) => {
+      const targetEntities = actionState.targets.entities;
+      const targetIds = actionState.targets.ids;
+      // console.log(targetIds);
+
+      targetIds.forEach((id) => {
+        console.log(targetEntities[id]);
+        targetingAdapter.updateOne(state.targeting, {
+          id: id,
+          changes: targetEntities[id],
+        });
+      });
+    });
   },
 });
 
-export const { setActorObject, loadActor, toggleTarget } =
+export const { setActorObject, loadActor, toggleTarget, setTargetMode, toggleTargetMode } =
   makeActorSlice.actions;
 
 export const actorObject = (state) => state.makeActor.actorObject;
 export const actorState = (state) => state.makeActor;
 export const actorId = (state) => state.makeActor.id;
 export const actorImage = (state) => state.makeActor.actorImage;
+export const targetModeState = (state) => state.makeActor.targetMode;
 
 export default makeActorSlice.reducer;

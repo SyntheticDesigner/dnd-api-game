@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const ManageBtnWrap = styled.button`
   grid-column: 5 / 6;
@@ -70,5 +70,40 @@ export const TableWrapper = styled.aside`
     bottom: 0;
     right: 0;
     left: 0;
+    z-index: -1;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+`;
+
+export const CharToken = styled.li`
+  height: 90px;
+  width: 90px;
+  transition: all 0.3s;
+  button {
+    height: 100%;
+    width: 100%;
+    padding: 4px;
+    background: none;
+    position: relative;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+      position: absolute;
+      color: white;
+      margin-top: -4px;
+      z-index: 1;
+    }
+    img {
+      height: 100%;
+      filter: brightness(70%);
+    }
+  }
+  &:hover {
+    transform: scale(1.2);
   }
 `;
