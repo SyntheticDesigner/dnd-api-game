@@ -49,7 +49,7 @@ export const RecordsWrapper = styled.aside`
       ? "translateY(-50%) translateX(0%)"
       : "translateY(-50%) translateX(-100%)"};
   box-shadow: 0px 4px 8px hsla(0, 0%, 0%, 0.5);
-  z-index: 1;
+  z-index: 0;
   background: linear-gradient(
       180deg,
       #bf953f -65.02%,
