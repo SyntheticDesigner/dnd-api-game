@@ -31,6 +31,7 @@
   height: 100vh;
   position: absolute;
   overflow: hidden;
+  pointer-events: none;
 }
 
 #menu-root {
@@ -40,6 +41,7 @@
   padding-top: 120px;
   justify-content: center;
   position: absolute;
+  pointer-events: none;
 }
 
 button {

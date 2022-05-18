@@ -8,8 +8,8 @@ export const NavWrap = styled.nav`
   width: 100%;
   z-index: 3;
   justify-content: center;
-  align-items: center;
   pointer-events: none;
+  align-items: center;
   button {
     pointer-events: auto;
   }
