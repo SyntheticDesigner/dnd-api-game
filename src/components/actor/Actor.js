@@ -60,8 +60,6 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
     if (targetMode && !selected) {
       dispatch(toggleTarget(actor.member));
     } else if (!selected) {
-      console.log("dont do this");
-      console.log(memberEnts[actor.member.id].member)
       dispatch(loadActor(memberEnts[actor.member.id].member));
     }
   }

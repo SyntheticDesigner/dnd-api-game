@@ -374,6 +374,11 @@ export const makeActorSlice = createSlice({
         state.actorObject = action.payload;
         state.ac = action.payload.armor_class;
         state.hp = action.payload.hit_points;
+        state.targetMode = false;
+        state.targeting = targetingAdapter.getInitialState();
+        state.actorPos = { x: 0, y: 0 };
+        state.targetedBy = "";
+        state.openInfo = false;
         state.actorImage =
           action.payload.name &&
           `https://5e.tools/img/MM/${action.payload.name

@@ -42,12 +42,10 @@ export const Board = styled.ul`
   position: relative;
   display: grid;
   list-style-type: none;
-  grid-template-columns: repeat(auto-fill, 60px);
-  grid-template-rows: repeat(auto-fill, 60px);
-  height: 68%;
-  width: 61%;
-  min-width: 240px;
-  min-height: 420px;
+  grid-template-columns: repeat(4, 64px);
+  grid-template-rows: repeat(7, 64px);
+  width: 256px;
+  height: 448px;
   margin: auto auto;
   /* @media (orientation: landscape) {
     height: 61%;
