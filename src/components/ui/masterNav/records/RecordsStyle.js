@@ -6,7 +6,7 @@ export const RecordsBtnWrap = styled.button`
   border: none;
   outline: none;
   background: none;
-
+  pointer-events: auto;
   &:hover .recordsIconImg {
     transform: scale(1.1);
   }

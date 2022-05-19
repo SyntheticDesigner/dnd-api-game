@@ -13,6 +13,7 @@ export const ApiNavWrap = styled.ul`
   right: 0;
   z-index: 4;
   padding: 8px;
+  pointer-events: auto;
   background: linear-gradient(
       180deg,
       #bf953f -65.02%,

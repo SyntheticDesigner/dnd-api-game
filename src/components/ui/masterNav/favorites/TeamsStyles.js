@@ -9,6 +9,7 @@ export const MiniMngrWrap = styled.div`
   width: 90vw;
   box-shadow: 0px 2px 4px hsla(0, 0%, 0%, 0.6);
   z-index: 4;
+  pointer-events: auto;
   background: linear-gradient(
       180deg,
       #bf953f -65.02%,

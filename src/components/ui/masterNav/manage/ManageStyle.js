@@ -35,6 +35,7 @@ export const ManageBtnWrap = styled.button`
 `;
 
 export const TableWrapper = styled.aside`
+  pointer-events: auto;
   background-color: var(--bg-dark);
   height: 70%;
   width: 50vw;

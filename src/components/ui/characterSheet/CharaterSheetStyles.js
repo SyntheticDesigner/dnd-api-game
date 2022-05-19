@@ -13,6 +13,7 @@ export const CharSheet = styled.div`
   overflow: scroll;
   border-radius: 8px;
   color: white;
+  pointer-events: auto;
   & .close-btn {
     right: 16px;
     top: 16px;

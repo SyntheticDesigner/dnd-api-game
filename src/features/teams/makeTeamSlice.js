@@ -196,31 +196,6 @@ export const teamSlice = createSlice({
           changes: { member: targetEntities[id] },
         });
       });
-      //update the members entity with the new member
-      // console.log(member);
-      // membersAdapter.updateOne(state.members, {
-      //   id: member.id,
-      //   changes: { member: member },
-      // });
-      // //create a deep copy of the member's team member array
-      // const teamArray = JSON.parse(
-      //   JSON.stringify(
-      //     teamsAdapter.getSelectors().selectById(state, member.teamId).members
-      //   )
-      // );
-      // //map through the array updating the designated member
-      // let updatedTeamArray = teamArray.map((teamMember) => {
-      //   if (teamMember.memberId === member.id) {
-      //     return { memberId: member.id, member: member };
-      //   } else {
-      //     return teamMember;
-      //   }
-      // });
-      // //update the team with the new member array
-      // teamsAdapter.updateOne(state, {
-      //   id: member.teamId,
-      //   changes: { members: updatedTeamArray },
-      // });
     });
   },
 });

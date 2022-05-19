@@ -129,15 +129,8 @@ export const MonsterOverview = styled.div`
   padding-bottom: 58px;
   overflow-y: scroll;
   z-index: 0;
-  background: linear-gradient(
-      180deg,
-      #bf953f -65.02%,
-      #fcf6ba -26.35%,
-      #b38728 20.06%,
-      #fbf5b7 63.88%,
-      #aa771c 99.98%
-    ),
-    #595959;
+  background: var(--bg-medium);
+  border: 3px solid var(--font-color-brand);
   & > img {
     grid-column: 2 / 5;
     grid-row: 2 / 3;
@@ -211,21 +204,6 @@ export const MonsterOverview = styled.div`
     padding: 4px;
     font-size: 1.2em;
     margin-bottom: 8px;
-  }
-  &::before {
-    content: "";
-    /* height: calc(100% - 4px); */
-    /* width: calc(100% - 4px); */
-    width: calc(95% - 4px);
-    height: calc(76vh - 4px);
-    margin: auto;
-    background-color: var(--bg-medium);
-    position: fixed;
-    top: 4px;
-    bottom: 4px;
-    right: 4px;
-    left: 4px;
-    z-index: -1;
   }
 `;
 

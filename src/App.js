@@ -6,58 +6,34 @@ import MasterNav from "./components/ui/masterNav/MasterNav";
 import { AppWrap, RecordsWrapper } from "./StyledComponents";
 import { getData } from "./utils/utils";
 
+import { loadingState, loadMonsters } from "./features/play/playSlice";
+
+import { useSelector, useDispatch } from "react-redux";
+
 import ReactDOM from "react-dom";
+import Loading from "./components/loading/Loading";
 
 function App() {
-  const [links, setLinks] = useState({});
-  const [page, setPage] = useState("");
-  const [pageIndex, setPageIndex] = useState("");
-  const [pageRes, setPageRes] = useState({});
-  const [pageContentLink, setPageContentLink] = useState("");
-  const [pageContent, setPageContent] = useState("");
-  const [loading, setLoading] = useState(true);
   const [apiUrl, setApiUrl] = useState("");
+  const loading = useSelector(loadingState);
+  const dispatch = useDispatch();
+  const [loaded, setLoaded] = useState(false);
 
-  // useEffect(() => {
-  //   getData().then((res) => {
-  //     setLinks(res);
-  //     // console.log(res);
-  //   });
-  //   page &&
-  //     getData(page).then((res) => {
-  //       setPageRes(res);
-  //       setLoading(false);
-  //       // console.log(res);
-  //     });
-  //   pageContentLink &&
-  //     getData(pageContentLink).then((res) => {
-  //       setPageContent(res);
-  //     });
-  // }, [page, pageContentLink, pageIndex]);
-
-  const pageUi = pageRes["count"] ? (
-    <div>
-      {/* {_monsterName} */}
-      {pageRes.results.map((data) => (
-        <button
-          key={data.index}
-          onClick={() => {
-            setPageContentLink(data.url);
-          }}
-        >
-          {data.name}
-        </button>
-      ))}
-    </div>
-  ) : (
-    <></>
-  );
+  useEffect(() => {
+    if (!loaded) {
+      dispatch(loadMonsters());
+    }
+  }, [loaded]);
 
   return (
     <AppWrap>
       <MasterNav />
       <GameBoard />
-
+      {loading &&
+        ReactDOM.createPortal(
+          <Loading />,
+          document.getElementById("loading-root")
+        )}
       {ReactDOM.createPortal(
         <Outlet context={[apiUrl, setApiUrl]} />,
         document.getElementById("api-root")
