@@ -1,4 +1,6 @@
-# K.A. Construction React Single Page Landing
+# DNGN Binder
+
+[Live Website](https://dngnbinder.web.app/)
 
 ## Table of contents
 
@@ -31,8 +33,8 @@ Desktop and mobile web app that uses the dungeons and dragons api to simulate a 
 
 ### Links
 
-- Solution URL: [https://github.com/SyntheticDesigner/k-a-construction](https://github.com/SyntheticDesigner/k-a-construction)
-- Live Site URL: [https://syntheticdesigner.github.io/k-a-construction/](https://syntheticdesigner.github.io/k-a-construction/)
+- Solution URL: [https://github.com/SyntheticDesigner/dnd-api-game](https://github.com/SyntheticDesigner/dnd-api-game)
+- Live Site URL: [https://dngnbinder.web.app/](https://dngnbinder.web.app/)
 
 ## My process
 
