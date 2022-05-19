@@ -31,6 +31,8 @@ Desktop and mobile web app that uses the dungeons and dragons api to simulate a 
 ![Icons](./design/icons.png)
 ![Break Down](./design/breakdowns.png)
 
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F9J2AOIjR5QJqwEOOdP10ji%2FDNGN-Binder%3Fnode-id%3D1410%253A9607" allowfullscreen></iframe>
+
 ### Links
 
 - Solution URL: [https://github.com/SyntheticDesigner/dnd-api-game](https://github.com/SyntheticDesigner/dnd-api-game)
