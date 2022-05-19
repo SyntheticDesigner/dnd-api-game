@@ -49,7 +49,7 @@ export const ApiNavWrap = styled.ul`
         height: calc(100% - 4px);
         width: calc(100% - 4px);
         margin: auto;
-        background-color: var(--bg-medium);
+        background-color: var(--bg-light);
         position: absolute;
         top: 0;
         bottom: 0;
@@ -70,7 +70,7 @@ export const ApiNavWrap = styled.ul`
     height: calc(100% - 4px);
     width: calc(100% - 4px);
     margin: auto;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-medium);
     position: absolute;
     top: 0;
     bottom: 0;
