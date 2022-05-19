@@ -33,9 +33,9 @@ export const GameBoardWrapper = styled.div`
     margin-left: -4px;
   }
 
-  @media (orientation: landscape) {
+  /* @media (orientation: landscape) {
     background-image: url(${`${process.env.PUBLIC_URL}/images/TheFightingPit_land.jpg`});
-  }
+  } */
 `;
 
 export const Board = styled.ul`
@@ -49,12 +49,12 @@ export const Board = styled.ul`
   min-width: 240px;
   min-height: 420px;
   margin: auto auto;
-  @media (orientation: landscape) {
+  /* @media (orientation: landscape) {
     height: 61%;
     width: 68%;
     min-width: 420px;
     min-height: 240px;
-  }
+  } */
 `;
 
 export const Token = styled.li`

@@ -42,8 +42,9 @@ export const RecordsWrapper = styled.aside`
   margin: auto;
   position: absolute;
   top: 50%;
-  left:0;
+  left: 0;
   transition: transform 0.5s;
+  color: white;
   transform: ${({ modal }) =>
     modal
       ? "translateY(-50%) translateX(0%)"
@@ -59,6 +60,8 @@ export const RecordsWrapper = styled.aside`
       #aa771c 99.98%
     ),
     #595959;
+  pointer-events: auto;
+  padding: 16px;
   &::before {
     content: "";
     height: calc(100% - 4px);
@@ -70,5 +73,39 @@ export const RecordsWrapper = styled.aside`
     bottom: 0;
     right: 0;
     left: 0;
+    z-index: -1;
+  }
+  & > ul {
+    height: 100%;
+    overflow-y: scroll;
+  }
+`;
+
+export const Record = styled.li`
+  padding: 8px;
+  margin-bottom: 16px;
+  background: linear-gradient(
+      180deg,
+      #bf953f -65.02%,
+      #fcf6ba -26.35%,
+      #b38728 20.06%,
+      #fbf5b7 63.88%,
+      #aa771c 99.98%
+    )
+    #595959;
+  z-index: 0;
+  position: relative;
+  &::before {
+    content: "";
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    margin: auto;
+    background-color: var(--bg-light);
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 `;

@@ -45,7 +45,7 @@ export default function MasterNav() {
           <LifeCounter />
           <Records />
           <Manage />
-          <button onClick={()=>dispatch(startRound(playState))}style={{gridRow: "1 / 2"}}>Start Round</button>
+          {/* <button onClick={()=>dispatch(startRound(playState))}style={{gridRow: "1 / 2"}}>Start Round</button> */}
           {/* <CreateTeamBtnWrap>
           <button onClick={() => setShowMiniMngr(!showMiniMngr)}>
             Manage Teams

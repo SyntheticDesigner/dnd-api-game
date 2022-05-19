@@ -86,6 +86,7 @@ export default function Monster() {
     monster.name && (
       <>
         <MonsterOverview>
+          <CloseBtn click={() => navigate(-1)} />
           <button className='addToTeam' onClick={addToFavorites}>
             Add to Favorites
           </button>
@@ -140,7 +141,6 @@ export default function Monster() {
 
           {monster.actions && <Actions actions={monster.actions} />}
         </MonsterOverview>
-        <CloseBtn click={() => navigate(-1)} />
       </>
     )
   );

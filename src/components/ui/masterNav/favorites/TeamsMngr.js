@@ -14,9 +14,11 @@ import {
 import {
   setTeamSelected,
   teamSelected,
+  setTeamMngr
 } from "../../../../features/ui/uiControlSlice";
 //import styles
 import { MiniMngrWrap, Roster, Team } from "./TeamsStyles";
+import CloseBtn from "../../setPieces/CloseBtn";
 
 export default function TeamsMngr() {
   //Team Slice Selectors
@@ -111,6 +113,7 @@ export default function TeamsMngr() {
   }
   return (
     <MiniMngrWrap>
+      <CloseBtn click={()=>dispatch(setTeamMngr(false))}/>
       <input
         onChange={(e) => setTeamName(e.target.value)}
         value={teamName}

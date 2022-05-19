@@ -22,6 +22,7 @@ const initialState = {
   attackResults: resultsAdapter.getInitialState(),
   startAction: false,
   endAction: false,
+  actionHistory: [],
 };
 
 const actionSlice = createSlice({
@@ -39,19 +40,15 @@ const actionSlice = createSlice({
       state.attackResults = resultsAdapter.getInitialState();
       state.startAction = true;
       state.endAction = false;
-      if (action.attack_bonus >= 0) {
-        console.log("attack");
-      } else {
-        console.log("maybe attack");
-      }
+  
     },
     attack: (state, action) => {
       let targets = targetsAdapter.getSelectors().selectEntities(state.targets);
       let targetIds = targetsAdapter.getSelectors().selectIds(state.targets);
       // console.log(actor)
-      if(state.user.hp < 1 ){
-        alert("This Character is unconscious and can not attack right now")
-      }else if (targetIds.length < 1) {
+      if (state.user.hp < 1) {
+        alert("This Character is unconscious and can not attack right now");
+      } else if (targetIds.length < 1) {
         alert("You do not have any targets");
       } else {
         state.attackRoll = rollDice(`1d20+${state.action.attack_bonus}`);
@@ -114,11 +111,26 @@ const actionSlice = createSlice({
       state.damageRoll = currentDamage;
       state.endAction = true;
     },
-    resetAction: () => initialState,
+    resetAction: (state, { payload }) => {
+      state.user = {};
+      state.action = {};
+      state.extraBonus = 0;
+      state.attackRoll = 0;
+      state.damageRoll = 0;
+      state.hit = false;
+      state.targets = targetsAdapter.getInitialState();
+      state.attackResults = resultsAdapter.getInitialState();
+      state.startAction = false;
+      state.endAction = false;
+      console.log(payload);
+      state.actionHistory.push(payload);
+    },
   },
 });
 
-export const { newAction, attack, rollDamage, resetAction } = actionSlice.actions;
+export const { newAction, attack, rollDamage, resetAction } =
+  actionSlice.actions;
 export const actionState = (state) => state.action;
+export const actionHistoryState = (state) => state.action.actionHistory;
 
 export default actionSlice.reducer;

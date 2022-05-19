@@ -11,9 +11,9 @@ export const CharSheet = styled.div`
   transform: translate(-50%, -50%);
   box-shadow: 0px 4px 8px hsla(0, 0%, 0%, 0.5);
   overflow: scroll;
-  border-radius: 8px;
   color: white;
   pointer-events: auto;
+  border: 3px solid var(--font-color-brand);
   & .close-btn {
     right: 16px;
     top: 16px;

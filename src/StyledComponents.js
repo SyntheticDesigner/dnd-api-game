@@ -16,7 +16,7 @@ export const AppWrap = styled.div`
     #595959;
   position: relative;
   z-index: 0;
-  @media (orientation: landscape) {
+  /* @media (orientation: landscape) {
     grid-template-columns: 1fr min(100%, 720px) 1fr;
     grid-template-rows: 1fr min(100%, 560px) 1fr;
   }
@@ -24,8 +24,8 @@ export const AppWrap = styled.div`
     @media (orientation: landscape) {
       grid-template-columns: 1fr min(100%, 900px) 1fr;
       grid-template-rows: 1fr min(100%, 700px) 1fr;
-    }
-  }
+    } 
+  }*/
   &::before {
     content: "";
     height: calc(100% - 4px);

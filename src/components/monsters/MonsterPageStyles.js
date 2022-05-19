@@ -94,7 +94,7 @@ export const ListWrap = styled.ul`
       }
     }
   }
-  .flexMonsterListBtn{
+  .flexMonsterListBtn {
     width: 100%;
     background-color: var(--bg-medium);
     padding: 4px;
@@ -131,6 +131,14 @@ export const MonsterOverview = styled.div`
   z-index: 0;
   background: var(--bg-medium);
   border: 3px solid var(--font-color-brand);
+  & > button:nth-child(1) {
+    grid-row: 1 /2;
+    grid-column: 5 /6;
+  }
+  & > button:nth-child(2) {
+    grid-row: 1 /2;
+    grid-column: 1/2;
+  }
   & > img {
     grid-column: 2 / 5;
     grid-row: 2 / 3;
@@ -152,14 +160,14 @@ export const MonsterOverview = styled.div`
     font-size: 1.7em;
     width: fit-content;
   }
-  & > h3:nth-child(4) {
+  & > h3:nth-child(5) {
     font-size: 1.5em;
     text-align: center;
     margin: 16px 0px;
     grid-column: 1 / 2;
     grid-row: 2 / 3;
   }
-  & > h3:nth-child(5) {
+  & > h3:nth-child(6) {
     font-size: 1.5em;
     text-align: center;
     margin: 16px 0px;
