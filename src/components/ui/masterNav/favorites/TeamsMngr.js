@@ -10,10 +10,12 @@ import {
   toggleInspect,
   removeMember,
   deleteTeam,
+  setTeamSelected,
+  teamSelectedState,
 } from "../../../../features/teams/makeTeamSlice";
 import {
-  setTeamSelected,
-  teamSelected,
+  // setTeamSelected,
+  // teamSelected,
   setTeamMngr
 } from "../../../../features/ui/uiControlSlice";
 //import styles
@@ -27,7 +29,7 @@ export default function TeamsMngr() {
   const members = useSelector(membersSelectors.selectEntities);
 
   //UI selectors
-  const currentTeam = useSelector(teamSelected);
+  const currentTeam = useSelector(teamSelectedState);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

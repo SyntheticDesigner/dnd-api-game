@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { deleteTeam, addFavorite } from "../../features/teams/makeTeamSlice";
+import { startRound } from "../play/playSlice";
 
 export const uiControllerSlice = createSlice({
   name: "uiController",
@@ -10,7 +11,7 @@ export const uiControllerSlice = createSlice({
     expandMenu: false,
     recordTbl: false,
     myTeamTbl: false,
-    teamSelected: "",
+    actionModal: false,
   },
   reducers: {
     setSrd: (state, action) => {
@@ -61,20 +62,16 @@ export const uiControllerSlice = createSlice({
       state.recordTbl = false;
       state.myTeamTbl = false;
     },
-    setTeamSelected: (state, { payload: teamId }) => {
-      state.teamSelected = teamId;
-      
-    },
-    setExpandedMenu: (state, action) => {
-      state.expandedMenu = action.payload;
+    setExpandMenu: (state, action) => {
+      state.expandMenu = action.payload;
       state.srd = false;
       state.teamMngr = false;
       state.gameStart = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
     },
-    toggleExpandedMenu: (state, action) => {
-      state.expandedMenu = !state.expandedMenu;
+    toggleExpandMenu: (state, action) => {
+      state.expandMenu = !state.expandMenu;
       state.srd = false;
       state.teamMngr = false;
       state.gameStart = false;
@@ -113,6 +110,22 @@ export const uiControllerSlice = createSlice({
       state.expandMenu = false;
       state.recordTbl = false;
     },
+    setActionModal: (state, action) => {
+      state.actionModal = action.payload;
+      // state.srd = false;
+      // state.teamMngr = false;
+      // state.gameStart = false;
+      // state.expandMenu = false;
+      // state.recordTbl = false;
+    },
+    toggleActionModal: (state, action) => {
+      state.actionModal = !state.actionModal;
+      // state.srd = false;
+      // state.teamMngr = false;
+      // state.gameStart = false;
+      // state.expandMenu = false;
+      // state.recordTbl = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(deleteTeam, (state, { payload: teamId }) => {
@@ -127,6 +140,14 @@ export const uiControllerSlice = createSlice({
       }
       //generate a new unique id each time the actor is added to a team
     });
+    builder.addCase(
+      startRound,
+      (state, { payload: { prevState: playState, playerTeam } }) => {
+        if (playerTeam === undefined) {
+          state.teamMngr = true;
+        }
+      }
+    );
   },
 });
 
@@ -137,20 +158,21 @@ export const {
   toggleTeamMngr,
   setGameStart,
   toggleGameStart,
-  setTeamSelected,
-  toggleExpandedMenu,
-  setExpandedMenu,
+  toggleExpandMenu,
+  setExpandMenu,
   toggleMyTeamTbl,
   setMyTeamTbl,
   toggleRecordTbl,
+  setActionModal,
+  toggleActionModal,
 } = uiControllerSlice.actions;
 
 export const srdState = (state) => state.uiController.srd;
 export const teamMngrState = (state) => state.uiController.teamMngr;
 export const gameStartState = (state) => state.uiController.gameStart;
-export const expandedMenuState = (state) => state.uiController.expandedMenu;
+export const expandMenuState = (state) => state.uiController.expandMenu;
 export const recordTblState = (state) => state.uiController.recordTbl;
 export const myTeamTblState = (state) => state.uiController.myTeamTbl;
-export const teamSelected = (state) => state.uiController.teamSelected;
+export const actionModalState = (state)=> state.uiController.actionModal;
 
 export default uiControllerSlice.reducer;

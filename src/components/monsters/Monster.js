@@ -10,11 +10,11 @@ import {
   actorImage,
   actorState,
 } from "../../features/actor/makeActorSlice";
-import { addMember, addFavorite } from "../../features/teams/makeTeamSlice";
+import { addMember, addFavorite, teamSelectedState  } from "../../features/teams/makeTeamSlice";
 import RollModifier from "../ui/setPieces/RollModifier";
 import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate, useParams } from "react-router-dom";
-import { teamSelected } from "../../features/ui/uiControlSlice";
+// import { teamSelected } from "../../features/ui/uiControlSlice";
 import CloseBtn from "../ui/setPieces/CloseBtn";
 
 export default function Monster() {
@@ -24,7 +24,7 @@ export default function Monster() {
 
   const navigate = useNavigate();
 
-  const selectedTeam = useSelector(teamSelected);
+  const selectedTeam = useSelector(teamSelectedState);
 
   const dispatch = useDispatch();
   const params = useParams();

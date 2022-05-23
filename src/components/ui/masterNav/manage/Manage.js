@@ -6,27 +6,29 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleMyTeamTbl,
   myTeamTblState,
-  teamSelected,
 } from "../../../../features/ui/uiControlSlice";
-import { teamsSelectors, addMember } from "../../../../features/teams/makeTeamSlice";
+import {
+  teamsSelectors,
+  addMember,
+  teamSelectedState,
+} from "../../../../features/teams/makeTeamSlice";
 
 import squareFrame from "../../../../assets/icons/square-frame.png";
 import crown from "../../../../assets/icons/crown.svg";
 const Manage = () => {
   const dispatch = useDispatch();
   const teamTblModal = useSelector(myTeamTblState);
-  const selectedTeam = useSelector(teamSelected);
+  const selectedTeam = useSelector(teamSelectedState);
   const allTeams = useSelector(teamsSelectors.selectEntities);
 
-  const [favList, setFavList] = useState({});
+  const [acqList, setAcqList] = useState({});
 
-  // const favoritesList = allTeams[selectedTeam].favorites;
+  // const acquiredList = allTeams[selectedTeam].acquired;
 
-  function addToTeam(member){
-    console.log(member);
-    dispatch(addMember({teamId: selectedTeam, member: member}))
+  function addToTeam(member) {
+    dispatch(addMember({ teamId: selectedTeam, member: member }));
   }
-  // const teamFavorites = useSelector(favoritesSelectors.selectEntities(teamSelected))
+  // const teamAcquired = useSelector(acquiredSelectors.selectEntities(teamSelected))
   const ManageBtn = () => {
     return (
       <>
@@ -44,21 +46,25 @@ const Manage = () => {
     return (
       <>
         <TableWrapper modal={teamTblModal}>
-          {teamSelected && allTeams[selectedTeam] ? (
+          {selectedTeam && allTeams[selectedTeam] ? (
             <ul>
-              {allTeams[selectedTeam].favorites.ids.length > 0 &&
-                allTeams[selectedTeam].favorites.ids.map((id) => (
+              {allTeams[selectedTeam].acquired.ids.length > 0 &&
+                allTeams[selectedTeam].acquired.ids.map((id) => (
                   <CharToken key={id}>
-                    <button onClick={()=>addToTeam(allTeams[selectedTeam].favorites.entities[id])}>
+                    <button
+                      onClick={() =>
+                        addToTeam(allTeams[selectedTeam].acquired.entities[id])
+                      }
+                    >
                       <p>
                         {
-                          allTeams[selectedTeam].favorites.entities[id]
+                          allTeams[selectedTeam].acquired.entities[id]
                             .actorObject.name
                         }
                       </p>
                       <img
                         src={
-                          allTeams[selectedTeam].favorites.entities[id]
+                          allTeams[selectedTeam].acquired.entities[id]
                             .actorImage
                         }
                         alt=''

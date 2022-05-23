@@ -6,10 +6,10 @@ import ApiNav from "../../apiNav/ApiNav";
 
 //import redux control
 import {
-  expandedMenuState,
+  expandMenuState,
   toggleTeamMngr,
   toggleSrd,
-  toggleExpandedMenu,
+  toggleExpandMenu,
   teamMngrState,
   srdState
 } from "../../../../features/ui/uiControlSlice";
@@ -30,7 +30,7 @@ import TeamsMngr from "../favorites/TeamsMngr";
 export default function Menu() {
   const dispatch = useDispatch();
 
-  const expandedMenu = useSelector(expandedMenuState);
+  const expandedMenu = useSelector(expandMenuState);
   const openTeamMngr = useSelector(teamMngrState);
   const openSrdContent = useSelector(srdState);
 
@@ -76,7 +76,7 @@ export default function Menu() {
       <MenuBtnWrap
         modal={expandedMenu}
         onClick={() => {
-          dispatch(toggleExpandedMenu());
+          dispatch(toggleExpandMenu());
         }}
       >
         <div className='imgWrap'>

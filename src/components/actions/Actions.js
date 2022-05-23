@@ -3,13 +3,10 @@ import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { ActionDetailsWrapper, ActionModal, ActionsWrap } from "./ActionStyle";
 
-import { generateKey, rollDice } from "../../utils/utils";
+import { rollDice } from "../../utils/utils";
 
 import { actorState, loadActor } from "../../features/actor/makeActorSlice";
-import {
-  updateMember,
-  membersSelectors,
-} from "../../features/teams/makeTeamSlice";
+
 import {
   actionState as _actionState,
   attack,
@@ -17,61 +14,46 @@ import {
   newAction,
   resetAction,
 } from "../../features/action/actionSlice";
+import {
+  setActionModal,
+  toggleActionModal,
+  actionModalState,
+} from "../../features/ui/uiControlSlice";
 
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 
 export default function Actions({ actions }) {
   const [_actions, set_Actions] = useState({});
-  const [actionModal, setActionModal] = useState(false);
+  // const [actionModal, setActionModal] = useState(false);
   const [damageDealt, setDamageDealt] = useState(false);
-  const [load, setLoad] = useState(0);
 
+  const actionModal = useSelector(actionModalState);
   const actionState = useSelector(_actionState);
   const actor = useSelector(actorState);
   const dispatch = useDispatch();
-  const members = useSelector(membersSelectors.selectEntities);
 
   useEffect(() => {
     actions && set_Actions(actions);
   }, [actions]);
 
-  // useEffect(() => {
-  //   if (load) {
-  //     console.log(actionState.damageRoll);
-  //     let test = actionState.attackResult.map(({ hit, id }) => {
-  //       console.log(hit);
-  //       if (hit) {
-  //         console.log(members);
-  //         console.log(id);
-  //         console.log(members[id].member);
-  //         // dispatch(loadActor(members[id].member));
-  //       }
-  //     });
-  //   }
-  // }, [load]);
-
-  // const process = useCallback((action) => {
-  //   if (load === 0) {
-  //     action.attackResult.forEach(({ hit, id }) => {
-  //       console.log(id);
-  //       dispatch(loadActor(members[id].member));
-  //     });
-  //   }
-  // });
+  useEffect(() => {
+    console.log(actionModal);
+  });
 
   useEffect(() => {
-    if (actionState.hit) {
-      setDamageDealt(true);
-    } else {
-      setDamageDealt(false);
+    if (!actionState.endAction) {
+      if (actionState.hit) {
+        setDamageDealt(true);
+      } else {
+        setDamageDealt(false);
+      }
     }
     if (actionState.startAction && actionState.endAction) {
-      setActionModal(false);
-      console.log("ending turn");
+      dispatch(setActionModal(false));
       dispatch(resetAction(actionState));
+      console.log("triggered");
     }
-    console.log("render action state");
   }, [actionState]);
 
   const Action = ({ action }) => {
@@ -84,8 +66,9 @@ export default function Actions({ actions }) {
           </h2>
           <button
             onClick={() => {
+              dispatch(setActionModal(true));
               dispatch(newAction({ action: action, actor: actor }));
-              setActionModal(true);
+              console.log("click");
             }}
             className='use'
           >
@@ -190,7 +173,7 @@ export default function Actions({ actions }) {
     return (
       <ActionModal>
         <section>
-          <button onClick={() => setActionModal(false)}>Close</button>
+          <button onClick={() => dispatch(setActionModal(false))}>Close</button>
           <h1>{actionState.action.name}</h1>
           {!damageDealt ? (
             <button
@@ -230,7 +213,7 @@ export default function Actions({ actions }) {
   return _actions.length ? (
     <>
       {actionModal &&
-        actionState.action &&
+        // actionState.startAction &&
         ReactDOM.createPortal(
           <ActionWindow />,
           document.getElementById("action-root")

@@ -12,7 +12,7 @@ export const getData = (append) => {
   );
 };
 
-function randomNumber(min, max) {
+export function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
@@ -52,6 +52,8 @@ export const rollDice = (diceString) => {
       formula.add -
       formula.subtract;
     return rollTotal;
+  }else if(diceString == 1){
+    return 1;
   } else {
     alert("Check the Dice String");
   }

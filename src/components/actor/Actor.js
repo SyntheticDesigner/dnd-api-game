@@ -11,7 +11,12 @@ import {
   toggleTargetMode,
   targetModeState,
 } from "../../features/actor/makeActorSlice";
-import { updateMember, membersSelectors } from "../../features/teams/makeTeamSlice";
+import {
+  updateMember,
+  membersSelectors,
+  teamSelectedState,
+  addFavorite
+} from "../../features/teams/makeTeamSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 //import images
@@ -35,11 +40,10 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
   const targetMode = useSelector(targetModeState);
   const membersIds = useSelector(membersSelectors.selectIds);
   const memberEnts = useSelector(membersSelectors.selectEntities);
-
-
+  const teamSelected = useSelector(teamSelectedState);
 
   useEffect(() => {
-    if (selectedActor.id === actor.memberId) {
+    if (selectedActor.id === actor.id) {
       //updates the member every time selectedActor changes
       // dispatch(updateMember(selectedActor));
       setSelected(true);
@@ -47,57 +51,64 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
       setSelected(false);
     }
     if (
-      targetedActors.filter((targetId) => targetId === actor.memberId).length >
-      0
+      targetedActors &&
+      targetedActors.length > 0 &&
+      targetedActors.filter((targetId) => targetId === actor.id).length > 0
     ) {
       setTargeted(true);
     } else {
       setTargeted(false);
     }
-  }, [actor.memberId, selectedActor]);
+  }, [actor.id, selectedActor]);
 
-  function clickHandler() {
+  function clickActor(actor) {
     if (targetMode && !selected) {
-      dispatch(toggleTarget(actor.member));
-    } else if (!selected) {
-      dispatch(loadActor(memberEnts[actor.member.id].member));
+      dispatch(toggleTarget(actor));
+    } else if (!selected && actor.hp > 0) {
+      dispatch(loadActor(actor));
+    } else if (!selected && actor.hp <= 0 && teamSelected !== actor.teamId){
+      dispatch(addFavorite({ teamId: teamSelected, member: actor }))
     }
   }
 
   const TokenMenu = () => {
     return (
       <TokenMenuGrid selected={selected}>
-        <button
-          className='target'
-          onClick={() => {
-            dispatch(toggleTargetMode());
-          }}
-        >
-          <img className='targetFrame' src={roundFrame} alt='' />
-          <img className='targetImg' src={target} alt='' />
-        </button>
         <button className='monsterHeart'>
-          <p>{actor.member.hp}</p>
+          <p>{actor.hp}</p>
           <img src={heartFrame} alt='' />
         </button>
-        <button className='combatState'>
-          <div className='shield'>
-            <img src={squareFrame} alt='' />
-            <img src={shield} alt='' />
-          </div>
-          <div className='sword'>
-            <img src={squareFrame} alt='' />
-            <img src={sword} alt='' />
-          </div>
-        </button>
-        <button
-          className='characterSheet'
-          onClick={() => {
-            setModal(!modal);
-          }}
-        >
-          <img src={charSheet} alt='' />
-        </button>
+        {teamSelected === actor.teamId && (
+          <>
+          <button
+            className='target'
+            onClick={() => {
+              dispatch(toggleTargetMode());
+            }}
+          >
+            <img className='targetFrame' src={roundFrame} alt='' />
+            <img className='targetImg' src={target} alt='' />
+          </button>
+            <button className='combatState'>
+              <div className='shield'>
+                <img src={squareFrame} alt='' />
+                <img src={shield} alt='' />
+              </div>
+              <div className='sword'>
+                <img src={squareFrame} alt='' />
+                <img src={sword} alt='' />
+              </div>
+            </button>
+            <button
+              className='characterSheet'
+              onClick={() => {
+                setModal(!modal);
+              }}
+            >
+              <img src={charSheet} alt='' />
+            </button>
+          </>
+        )}
       </TokenMenuGrid>
     );
   };
@@ -110,7 +121,7 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
           document.getElementById("overlay-root")
         )}
       <ActorToken
-        onClick={clickHandler}
+        onClick={() => clickActor(actor)}
         // onDoubleClick={() => {
         //   setModal(!modal);
         // }}
@@ -125,8 +136,10 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
         targeted={targeted}
       >
         <div className='actorWrap'>
-          {actor.member.hp < 1 && <img className="skull" src={skull} alt="nothing loading" />}
-          <img className="actorTokenImg" src={actor.member.actorImage} alt='' />
+          {actor.hp < 1 && (
+            <img className='skull' src={skull} alt='nothing loading' />
+          )}
+          <img className='actorTokenImg' src={actor.actorImage} alt='' />
         </div>
         <TokenMenu />
       </ActorToken>

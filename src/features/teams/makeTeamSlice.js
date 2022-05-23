@@ -1,11 +1,12 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { nanoid } from "@reduxjs/toolkit";
+import { startRound } from "../play/playSlice";
 
 import { resetAction } from "../action/actionSlice";
 
 export const teamsAdapter = createEntityAdapter();
 export const membersAdapter = createEntityAdapter();
-export const favoritesAdapter = createEntityAdapter({
+export const acquiredAdapter = createEntityAdapter({
   selectId: (member) => member.actorObject.index,
   sortComparer: (a, b) =>
     a.actorObject.index.localeCompare(b.actorObject.index),
@@ -15,23 +16,25 @@ export const teamsSelectors = teamsAdapter.getSelectors((state) => state.teams);
 export const membersSelectors = membersAdapter.getSelectors(
   (state) => state.teams.members
 );
-//access the favorites through the teams selector state.teams.entities[teamId].favorites
+//access the acquired through the teams selector state.teams.entities[teamId].acquired
 
 export const teamSlice = createSlice({
   name: "teams",
   initialState: teamsAdapter.getInitialState({
     members: membersAdapter.getInitialState(),
+    teamSelected: "",
+    round: 0,
   }),
   reducers: {
     addTeam: (state, { payload: { id, name } }) => {
-      // console.log(payload);
       teamsAdapter.addOne(state, {
         id: id,
         name: name,
-        favorites: favoritesAdapter.getInitialState(),
+        acquired: acquiredAdapter.getInitialState(),
+        //acquired is initialized as a dynamic entity adapter
         members: [],
+        health: 20,
       });
-      // teamsAdapter.addOne
     },
     deleteTeam: (state, { payload: teamId }) => {
       let members = teamsAdapter
@@ -41,6 +44,9 @@ export const teamSlice = createSlice({
       for (const index in members) {
         console.log(members[index].memberId);
         membersAdapter.removeOne(state.members, members[index].memberId);
+      }
+      if (state.teamSelected === teamId) {
+        state.teamSelected = "";
       }
       //remove each member in the list from the membersEntity
       teamsAdapter.removeOne(state, teamId);
@@ -142,17 +148,18 @@ export const teamSlice = createSlice({
         const memberId = member.id;
         //make a deep clone of member
         const memberCopy = JSON.parse(JSON.stringify(member));
+        memberCopy.hp = memberCopy.actorObject.hit_points;
 
-        const favoritesState = teamsAdapter
+        const acquiredState = teamsAdapter
           .getSelectors()
-          .selectById(state, teamId).favorites;
+          .selectById(state, teamId).acquired;
 
-        const newState = favoritesAdapter.addOne(favoritesState, member);
+        const newState = acquiredAdapter.addOne(acquiredState, memberCopy);
         teamsAdapter.updateOne(state, {
           id: teamId,
-          changes: { favorites: newState },
+          changes: { acquired: newState },
         });
-        // favoritesAdapter.addOne(state.playerFavorites, {
+        // acquiredAdapter.addOne(state.playeracquired, {
         //   id: memberId,
         //   member: memberCopy,
         // });
@@ -161,42 +168,157 @@ export const teamSlice = createSlice({
       }
     },
     removeFavorite: (state, { payload: memberId }) => {
-      favoritesAdapter.removeOne(state.playerFavorites, memberId);
+      acquiredAdapter.removeOne(state.playerAcquired, memberId);
+    },
+    setTeamSelected: (state, { payload: teamId }) => {
+      state.teamSelected = teamId;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(resetAction, (state, { payload: actionState }) => {
-      console.log(actionState.targets);
       const targetEntities = actionState.targets.entities;
       const targetIds = actionState.targets.ids;
       console.log(targetIds);
 
       targetIds.forEach((id) => {
-        console.log(targetEntities[id]);
-        const teamArray = JSON.parse(
-          JSON.stringify(
-            teamsAdapter.getSelectors().selectById(state, targetEntities[id].teamId).members
-          )
-        );
-        //map through the array updating the designated member
-        let updatedTeamArray = teamArray.map((teamMember) => {
-          if (teamMember.memberId === id) {
-            return { memberId: id, member: targetEntities[id] };
-          } else {
-            return teamMember;
-          }
-        });
-        teamsAdapter.updateOne(state, {
-          id: targetEntities[id].teamId,
-          changes: { members: updatedTeamArray },
-        });
+        //this if statement checks to see is the targets team id exists as a part of the teams
+        //if it does not that means its an npc and will be handled by the playSlice
+        if (
+          teamsAdapter
+            .getSelectors()
+            .selectIds(state)
+            .filter((teamId) => targetEntities[id].teamId === teamId).length > 0
+        ) {
+          const teamArray = JSON.parse(
+            JSON.stringify(
+              teamsAdapter
+                .getSelectors()
+                .selectById(state, targetEntities[id].teamId).members
+            )
+          );
+          //map through the array updating the designated member
+          let updatedTeamArray = teamArray.map((teamMember) => {
+            if (teamMember.memberId === id) {
+              return { memberId: id, member: targetEntities[id] };
+            } else {
+              return teamMember;
+            }
+          });
+          teamsAdapter.updateOne(state, {
+            id: targetEntities[id].teamId,
+            changes: { members: updatedTeamArray },
+          });
 
-        membersAdapter.updateOne(state.members, {
-          id: id,
-          changes: { member: targetEntities[id] },
-        });
+          membersAdapter.updateOne(state.members, {
+            id: id,
+            changes: { member: targetEntities[id] },
+          });
+        }
       });
     });
+    builder.addCase(
+      startRound,
+      (state, { payload: { prevState: playState } }) => {
+        state.round = playState.round + 1;
+        // console.log(playState);
+        if (playState.round === 0 && state.teamSelected) {
+          let ids = [nanoid(), nanoid(), nanoid()];
+          let berserker = playState.allMonsters.entities["berserker"];
+          let knight = playState.allMonsters.entities["knight"];
+          let priest = playState.allMonsters.entities["priest"];
+          const starterTeam = [
+            {
+              id: ids[0],
+              teamId: state.teamSelected,
+              member: {
+                id: ids[0],
+                teamId: state.teamSelected,
+                actorImage: `https://5e.tools/img/MM/${priest.name
+                  .split(",")[0]
+                  .split("/")[0]
+                  .split("(")[0]
+                  .trim()}.png`,
+                actorPos: { x: 0, y: 0 },
+                openInfo: false,
+                actorObject: priest,
+                ac: priest.armor_class,
+                hp: priest.hit_points,
+                targetedBy: "",
+                targeting: {},
+                targetMode: false,
+              },
+            },
+            {
+              id: ids[1],
+              teamId: state.teamSelected,
+              member: {
+                id: ids[1],
+                teamId: state.teamSelected,
+                actorImage: `https://5e.tools/img/MM/${knight.name
+                  .split(",")[0]
+                  .split("/")[0]
+                  .split("(")[0]
+                  .trim()}.png`,
+                actorPos: { x: 0, y: 0 },
+                openInfo: false,
+                actorObject: knight,
+                ac: knight.armor_class,
+                hp: knight.hit_points,
+                targetedBy: "",
+                targeting: {},
+                targetMode: false,
+              },
+            },
+            {
+              id: ids[2],
+              teamId: state.teamSelected,
+              member: {
+                id: ids[2],
+                teamId: state.teamSelected,
+                actorImage: `https://5e.tools/img/MM/${berserker.name
+                  .split(",")[0]
+                  .split("/")[0]
+                  .split("(")[0]
+                  .trim()}.png`,
+                actorPos: { x: 0, y: 0 },
+                openInfo: false,
+                actorObject: berserker,
+                ac: berserker.armor_class,
+                hp: berserker.hit_points,
+                targetedBy: "",
+                targeting: {},
+                targetMode: false,
+              },
+            },
+          ];
+          membersAdapter.addMany(state.members, starterTeam);
+          // const teamArray = JSON.parse(
+          //   JSON.stringify(
+          //     teamsAdapter.getSelectors().selectById(state, state.teamSelected).members
+          //   )
+          // );
+          let teamArray = starterTeam.map((member) => {
+            return { memberId: member.id, member: member.member };
+          });
+          teamsAdapter.updateOne(state, {
+            id: state.teamSelected,
+            changes: { members: teamArray },
+          });
+          const acquiredState = teamsAdapter
+            .getSelectors()
+            .selectById(state, state.teamSelected).acquired;
+
+          const newState = acquiredAdapter.addMany(
+            acquiredState,
+            starterTeam.map((member) => member.member)
+          );
+          teamsAdapter.updateOne(state, {
+            id: state.teamSelected,
+            changes: { acquired: newState },
+          });
+        }
+      }
+    );
   },
 });
 
@@ -211,6 +333,8 @@ export const {
   removeMember,
   updateMember,
   addFavorite,
+  setTeamSelected,
 } = teamSlice.actions;
 
+export const teamSelectedState = (state) => state.teams.teamSelected;
 export default teamSlice.reducer;

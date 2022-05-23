@@ -416,12 +416,15 @@ export const makeActorSlice = createSlice({
       state.actorImage = actorImage;
       state.actorPos = actorPos;
       state.openInfo = openInfo;
-      state.targeting = targeting;
+      if (targeting.ids !== undefined) {
+        state.targeting = targeting;
+      } else {
+        state.targeting = targetingAdapter.getInitialState();
+      }
       state.targetedBy = targetedBy;
       state.targetMode = targetMode;
       state.ac = ac;
       state.hp = hp;
-      console.log(targetMode);
     },
     toggleTarget: (state, { payload: actor }) => {
       //make deep copy of the targeting array
