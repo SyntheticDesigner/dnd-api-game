@@ -12,12 +12,12 @@ export const uiControllerSlice = createSlice({
     recordTbl: false,
     myTeamTbl: false,
     actionModal: false,
+    tutorial: true,
   },
   reducers: {
     setSrd: (state, action) => {
       state.srd = action.payload;
       state.teamMngr = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
@@ -25,7 +25,6 @@ export const uiControllerSlice = createSlice({
     toggleSrd: (state, action) => {
       state.srd = !state.srd;
       state.teamMngr = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
@@ -33,7 +32,6 @@ export const uiControllerSlice = createSlice({
     setTeamMngr: (state, action) => {
       state.teamMngr = action.payload;
       state.srd = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
@@ -41,7 +39,6 @@ export const uiControllerSlice = createSlice({
     toggleTeamMngr: (state, action) => {
       state.teamMngr = !state.teamMngr;
       state.srd = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
@@ -66,7 +63,6 @@ export const uiControllerSlice = createSlice({
       state.expandMenu = action.payload;
       state.srd = false;
       state.teamMngr = false;
-      state.gameStart = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
     },
@@ -74,7 +70,6 @@ export const uiControllerSlice = createSlice({
       state.expandMenu = !state.expandMenu;
       state.srd = false;
       state.teamMngr = false;
-      state.gameStart = false;
       state.recordTbl = false;
       state.myTeamTbl = false;
     },
@@ -82,7 +77,6 @@ export const uiControllerSlice = createSlice({
       state.recordTbl = action.payload;
       state.srd = false;
       state.teamMngr = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.myTeamTbl = false;
     },
@@ -90,7 +84,6 @@ export const uiControllerSlice = createSlice({
       state.recordTbl = !state.recordTbl;
       state.srd = false;
       state.teamMngr = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.myTeamTbl = false;
     },
@@ -98,7 +91,6 @@ export const uiControllerSlice = createSlice({
       state.myTeamTbl = action.payload;
       state.srd = false;
       state.teamMngr = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.recordTbl = false;
     },
@@ -106,25 +98,18 @@ export const uiControllerSlice = createSlice({
       state.myTeamTbl = !state.myTeamTbl;
       state.srd = false;
       state.teamMngr = false;
-      state.gameStart = false;
       state.expandMenu = false;
       state.recordTbl = false;
     },
     setActionModal: (state, action) => {
       state.actionModal = action.payload;
-      // state.srd = false;
-      // state.teamMngr = false;
-      // state.gameStart = false;
-      // state.expandMenu = false;
-      // state.recordTbl = false;
     },
     toggleActionModal: (state, action) => {
       state.actionModal = !state.actionModal;
-      // state.srd = false;
-      // state.teamMngr = false;
-      // state.gameStart = false;
-      // state.expandMenu = false;
-      // state.recordTbl = false;
+    },
+    setTutorial: (state, action) => {
+      console.log(action.payload);
+      state.tutorial = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -165,6 +150,7 @@ export const {
   toggleRecordTbl,
   setActionModal,
   toggleActionModal,
+  setTutorial,
 } = uiControllerSlice.actions;
 
 export const srdState = (state) => state.uiController.srd;
@@ -173,6 +159,7 @@ export const gameStartState = (state) => state.uiController.gameStart;
 export const expandMenuState = (state) => state.uiController.expandMenu;
 export const recordTblState = (state) => state.uiController.recordTbl;
 export const myTeamTblState = (state) => state.uiController.myTeamTbl;
-export const actionModalState = (state)=> state.uiController.actionModal;
+export const actionModalState = (state) => state.uiController.actionModal;
+export const tutorialState = (state) => state.uiController.tutorial;
 
 export default uiControllerSlice.reducer;

@@ -12,6 +12,7 @@
   --font-color-brand: hsla(54, 100%, 87%, 0.88);
 
   --bg-dark: #2e0d0d;
+  --bg-dark-opac: hsla(0, 56%, 5%, 0.9);
   --bg-medium: #421212;
   --bg-light: #242424;
 
@@ -24,6 +25,9 @@
   --medium-border: hsl(0, 61%, 45%);
   --selected-border: rgb(10, 207, 0);
   --targeted-border: hsla(0, 100%, 50%, 0.5);
+
+  --shadow-dark: 0px 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-medium: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 #root {

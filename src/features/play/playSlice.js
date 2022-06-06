@@ -7,18 +7,7 @@ import {
 import { getData, rollDice } from "../../utils/utils";
 import { resetAction } from "../action/actionSlice";
 
-export const npcTeamAdapter = createEntityAdapter();
-export const monsterListAdapter = createEntityAdapter({
-  selectId: (monster) => monster.index,
-});
-
-export const npcTeamSelectors = npcTeamAdapter.getSelectors(
-  (state) => state.play.npc.team
-);
-export const monsterListSelectors = monsterListAdapter.getSelectors(
-  (state) => state.play.allMonsters
-);
-
+//loads all the monster we will need for the game should not need to call fetch anywhere else
 export const loadMonsters = createAsyncThunk("play/loadMonsters", async () => {
   let test = await getData("/api/monsters").then((res) => {
     return res.results.map((res) => res.url);
@@ -28,23 +17,63 @@ export const loadMonsters = createAsyncThunk("play/loadMonsters", async () => {
   //this will take a few seconds need a loading screen
   //unpacks all the different monsters available once at the start of app
 });
+export const monsterListAdapter = createEntityAdapter({
+  selectId: (monster) => monster.index,
+});
+export const monsterListSelectors = monsterListAdapter.getSelectors(
+  (state) => state.play.allMonsters
+);
+
+//create the NPC state
+export const npcTeamAdapter = createEntityAdapter();
+export const npcTeamSelectors = npcTeamAdapter.getSelectors(
+  (state) => state.play.npc.team
+);
+
+const initialNpcState = {
+  id: "npcTeam",
+  hp: 20,
+  team: npcTeamAdapter.getInitialState(),
+};
+
+//create player state
+export const playersAdapter = createEntityAdapter();
+export const teamMembersAdapter = createEntityAdapter();
+export const acquiredAdapter = createEntityAdapter({
+  selectId: (member) => member.actorObject.index,
+  sortComparer: (a, b) =>
+    a.actorObject.index.localeCompare(b.actorObject.index),
+});
+
+const initialPlayersState = playersAdapter.getInitialState({
+  team: teamMembersAdapter.getInitialState(),
+  acquiredMonsters: acquiredAdapter.getInitialState(),
+  //this is initialized as a dynamic entity adapter in the addPlayer reducer
+  health: 20,
+});
+
+const initialState = {
+  allMonsters: monsterListAdapter.getInitialState(),
+  npc: initialNpcState,
+  players: initialPlayersState,
+  round: 0,
+  loading: false,
+  loaded: false,
+  currentPlayersTurn: "",
+  roundStart: false,
+  roundEnd: false,
+};
 
 export const playSlice = createSlice({
   name: "play",
-  initialState: {
-    allMonsters: monsterListAdapter.getInitialState(),
-    npc: {
-      id: "npcTeam",
-      hp: 20,
-      team: npcTeamAdapter.getInitialState(),
-    },
-    round: 0,
-    loading: false,
-    playerTurn: true,
-    roundStart: false,
-    roundEnd: false,
-  },
+  initialState,
   reducers: {
+    addPlayer: (state, { payload: { id, name } }) => {
+      playersAdapter.addOne(state, {
+        id: id ? id : nanoid(),
+        name: name,
+      });
+    },
     startRound: (state, { payload: { prevState, playerTeam } }) => {
       state.roundStart = true;
       state.playerTurn = true;
@@ -109,6 +138,7 @@ export const playSlice = createSlice({
       // state.allMonsters = payload;
       monsterListAdapter.addMany(state.allMonsters, payload);
       state.loading = false;
+      state.loaded = true;
     },
     [loadMonsters.rejected](state) {
       alert("Something went from with the server");
@@ -130,7 +160,7 @@ export const playSlice = createSlice({
           });
         }
       });
-      if(lastNpc === actionState.user.id){
+      if (lastNpc === actionState.user.id) {
         console.log("players Turn");
         state.playerTurn = true;
       }
@@ -144,5 +174,6 @@ export const play = (state) => state.play;
 export const loadingState = (state) => state.play.loading;
 export const allMonsters = (state) => state.play.allMonsters;
 export const playerTurnState = (state) => state.play.playerTurn;
+export const loadedState = (state) => state.play.loaded;
 
 export default playSlice.reducer;

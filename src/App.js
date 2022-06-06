@@ -6,27 +6,36 @@ import MasterNav from "./components/ui/masterNav/MasterNav";
 import { AppWrap, RecordsWrapper } from "./StyledComponents";
 import { getData } from "./utils/utils";
 
-import { loadingState, loadMonsters } from "./features/play/playSlice";
+import {
+  loadingState,
+  loadMonsters,
+  loadedState,
+} from "./features/play/playSlice";
+import { gameStartState } from "./features/ui/uiControlSlice";
 
 import { useSelector, useDispatch } from "react-redux";
 
 import ReactDOM from "react-dom";
 import Loading from "./components/loading/Loading";
+import HomePage from "./components/homepage/HomePage";
 
 function App() {
   const [apiUrl, setApiUrl] = useState("");
   const loading = useSelector(loadingState);
+  const gameStart = useSelector(gameStartState);
+  const loaded = useSelector(loadedState);
+
   const dispatch = useDispatch();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (!loaded) {
+    if (gameStart && !loaded) {
       dispatch(loadMonsters());
     }
-  }, [loaded]);
+  }, [loaded, gameStart]);
 
   return (
     <AppWrap>
+      {!gameStart && <HomePage />}
       <MasterNav />
       <GameBoard />
       {loading &&
