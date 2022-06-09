@@ -45,8 +45,11 @@ export const uiControllerSlice = createSlice({
     },
     setGameStart: (state, action) => {
       state.gameStart = action.payload;
+      if (action.payload === true) {
+        console.log(action.payload);
+        state.teamMngr = true;
+      }
       state.srd = false;
-      state.teamMngr = false;
       state.expandMenu = false;
       state.recordTbl = false;
       state.myTeamTbl = false;

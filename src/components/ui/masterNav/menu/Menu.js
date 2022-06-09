@@ -25,7 +25,7 @@ import close from "../../../../assets/icons/close-x.svg";
 import myD20Logo from "../../../../assets/icons/myD20Logo.svg";
 import teams from "../../../../assets/icons/teams.svg";
 
-import TeamsMngr from "../favorites/TeamsMngr";
+import TeamsMngr from "../teamMngr/TeamsMngr";
 
 export default function Menu() {
   const dispatch = useDispatch();

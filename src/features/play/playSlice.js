@@ -17,9 +17,11 @@ export const loadMonsters = createAsyncThunk("play/loadMonsters", async () => {
   //this will take a few seconds need a loading screen
   //unpacks all the different monsters available once at the start of app
 });
+//create a list of items for the Monsters
 export const monsterListAdapter = createEntityAdapter({
   selectId: (monster) => monster.index,
 });
+//create selectors for the monster list
 export const monsterListSelectors = monsterListAdapter.getSelectors(
   (state) => state.play.allMonsters
 );
@@ -29,7 +31,6 @@ export const npcTeamAdapter = createEntityAdapter();
 export const npcTeamSelectors = npcTeamAdapter.getSelectors(
   (state) => state.play.npc.team
 );
-
 const initialNpcState = {
   id: "npcTeam",
   hp: 20,
@@ -38,19 +39,16 @@ const initialNpcState = {
 
 //create player state
 export const playersAdapter = createEntityAdapter();
+export const playersSelectors = playersAdapter.getSelectors(
+  (state) => state.play.players
+);
 export const teamMembersAdapter = createEntityAdapter();
 export const acquiredAdapter = createEntityAdapter({
   selectId: (member) => member.actorObject.index,
   sortComparer: (a, b) =>
     a.actorObject.index.localeCompare(b.actorObject.index),
 });
-
-const initialPlayersState = playersAdapter.getInitialState({
-  team: teamMembersAdapter.getInitialState(),
-  acquiredMonsters: acquiredAdapter.getInitialState(),
-  //this is initialized as a dynamic entity adapter in the addPlayer reducer
-  health: 20,
-});
+const initialPlayersState = playersAdapter.getInitialState();
 
 const initialState = {
   allMonsters: monsterListAdapter.getInitialState(),
@@ -62,6 +60,7 @@ const initialState = {
   currentPlayersTurn: "",
   roundStart: false,
   roundEnd: false,
+  playersSelected: [],
 };
 
 export const playSlice = createSlice({
@@ -69,10 +68,29 @@ export const playSlice = createSlice({
   initialState,
   reducers: {
     addPlayer: (state, { payload: { id, name } }) => {
-      playersAdapter.addOne(state, {
+      console.log(id, name);
+      playersAdapter.addOne(state.players, {
         id: id ? id : nanoid(),
         name: name,
+        team: teamMembersAdapter.getInitialState(),
+        //initialized as a dynamic entity adapter in the addPlayer reducer
+        acquiredMonsters: acquiredAdapter.getInitialState(),
+        //initialized as a dynamic entity adapter in the addPlayer reducer
+        health: 20,
       });
+    },
+    deletePlayer: (state, { payload: playerId }) => {
+      playersAdapter.removeOne(state.players, playerId);
+    },
+    addSelectedPlayer: (state, { payload: teamId }) => {
+      let copy = JSON.parse(JSON.stringify(state.playersSelected));
+      copy.push(teamId);
+      state.playersSelected = copy;
+    },
+    removeSelectedPlayer: (state, { payload: playerId }) => {
+      let copy = JSON.parse(JSON.stringify(state.playersSelected));
+      let newCopy = copy.filter((id) => id !== playerId);
+      state.playersSelected = newCopy;
     },
     startRound: (state, { payload: { prevState, playerTeam } }) => {
       state.roundStart = true;
@@ -168,12 +186,20 @@ export const playSlice = createSlice({
   },
 });
 
-export const { startRound, endTurn } = playSlice.actions;
+export const {
+  startRound,
+  endTurn,
+  addPlayer,
+  deletePlayer,
+  addSelectedPlayer,
+  removeSelectedPlayer,
+} = playSlice.actions;
 
 export const play = (state) => state.play;
 export const loadingState = (state) => state.play.loading;
 export const allMonsters = (state) => state.play.allMonsters;
 export const playerTurnState = (state) => state.play.playerTurn;
 export const loadedState = (state) => state.play.loaded;
+export const playersSelectedState = (state) => state.play.playersSelected;
 
 export default playSlice.reducer;

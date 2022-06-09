@@ -60,6 +60,7 @@ export const TableWrapper = styled.aside`
       #aa771c 99.98%
     ),
     #595959;
+  color: white;
   &::before {
     content: "";
     height: calc(100% - 4px);

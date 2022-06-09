@@ -8,10 +8,11 @@ export const HomePageWrapper = styled.div`
   position: fixed;
   top: 0;
   color: white;
+  display: grid;
+  place-items: center;
   ul {
     position: relative;
     z-index: 0;
-    margin: 32px;
     background: linear-gradient(
         180deg,
         #bf953f -65.02%,
