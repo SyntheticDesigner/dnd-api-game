@@ -27,6 +27,7 @@ export const teamSlice = createSlice({
   }),
   reducers: {
     addTeam: (state, { payload: { id, name } }) => {
+      //refactored into playSlice
       teamsAdapter.addOne(state, {
         id: id,
         name: name,
@@ -37,6 +38,7 @@ export const teamSlice = createSlice({
       });
     },
     deleteTeam: (state, { payload: teamId }) => {
+      //refactored into playSlice
       let members = teamsAdapter
         .getSelectors()
         .selectById(state, teamId).members;
@@ -171,6 +173,7 @@ export const teamSlice = createSlice({
       acquiredAdapter.removeOne(state.playerAcquired, memberId);
     },
     setTeamSelected: (state, { payload: teamId }) => {
+      //refactored into playSlice
       state.teamSelected = teamId;
     },
   },
@@ -323,8 +326,8 @@ export const teamSlice = createSlice({
 });
 
 export const {
-  addTeam,
-  deleteTeam,
+  // addTeam,
+  // deleteTeam,
   addMember,
   updateTeam,
   getTeams,
@@ -333,8 +336,8 @@ export const {
   removeMember,
   updateMember,
   addFavorite,
-  setTeamSelected,
+  // setTeamSelected,
 } = teamSlice.actions;
 
-export const teamSelectedState = (state) => state.teams.teamSelected;
+// export const teamSelectedState = (state) => state.teams.teamSelected;
 export default teamSlice.reducer;

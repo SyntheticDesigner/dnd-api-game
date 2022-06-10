@@ -12,11 +12,10 @@ import {
   targetModeState,
 } from "../../features/actor/makeActorSlice";
 import {
-  updateMember,
-  membersSelectors,
   teamSelectedState,
-  addFavorite
+  addFavorite,
 } from "../../features/teams/makeTeamSlice";
+import { playersSelectedState } from "../../features/play/playSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 //import images
@@ -38,9 +37,7 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
   const selectedActor = useSelector(actorState);
   const targetedActors = useSelector(targetingSelectors.selectIds);
   const targetMode = useSelector(targetModeState);
-  const membersIds = useSelector(membersSelectors.selectIds);
-  const memberEnts = useSelector(membersSelectors.selectEntities);
-  const teamSelected = useSelector(teamSelectedState);
+  const playersSelected = useSelector(playersSelectedState);
 
   useEffect(() => {
     if (selectedActor.id === actor.id) {
@@ -66,8 +63,8 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
       dispatch(toggleTarget(actor));
     } else if (!selected && actor.hp > 0) {
       dispatch(loadActor(actor));
-    } else if (!selected && actor.hp <= 0 && teamSelected !== actor.teamId){
-      dispatch(addFavorite({ teamId: teamSelected, member: actor }))
+    } else if (!selected && actor.hp <= 0 && teamSelected !== actor.teamId) {
+      dispatch(addFavorite({ teamId: teamSelected, member: actor }));
     }
   }
 
@@ -80,15 +77,15 @@ export default function Actor({ actor, memberIndex, teamIndex }) {
         </button>
         {teamSelected === actor.teamId && (
           <>
-          <button
-            className='target'
-            onClick={() => {
-              dispatch(toggleTargetMode());
-            }}
-          >
-            <img className='targetFrame' src={roundFrame} alt='' />
-            <img className='targetImg' src={target} alt='' />
-          </button>
+            <button
+              className='target'
+              onClick={() => {
+                dispatch(toggleTargetMode());
+              }}
+            >
+              <img className='targetFrame' src={roundFrame} alt='' />
+              <img className='targetImg' src={target} alt='' />
+            </button>
             <button className='combatState'>
               <div className='shield'>
                 <img src={squareFrame} alt='' />
